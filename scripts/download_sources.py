@@ -41,9 +41,7 @@ def download(source: Source, dest: Path) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument(
-        "--force", action="store_true", help="re-download existing files"
-    )
+    parser.add_argument("--force", action="store_true", help="re-download existing files")
     args = parser.parse_args()
 
     RAW_DIR.mkdir(parents=True, exist_ok=True)

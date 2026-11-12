@@ -14,13 +14,15 @@ from regulens.config import get_settings
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
 
 
-def connect() -> psycopg.Connection:
+def connect(autocommit: bool = False) -> psycopg.Connection:
     """Open a new connection. Use it as a context manager: `with connect() as conn:`.
 
-    Leaving the `with` block commits the transaction (or rolls back on error)
-    and closes the connection.
+    Default: everything inside the `with` block is one transaction, committed
+    on exit (or rolled back on error). With autocommit=True each statement
+    commits immediately, and `with conn.transaction():` marks explicit
+    transactions. Ingestion uses this so each document commits on its own.
     """
-    return psycopg.connect(get_settings().database_url, connect_timeout=3)
+    return psycopg.connect(get_settings().database_url, connect_timeout=3, autocommit=autocommit)
 
 
 def init_db() -> None:

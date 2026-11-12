@@ -1,0 +1,10 @@
+# Lint/format settings for all Python in the repo (backend, scripts, eval).
+line-length = 100
+target-version = "py311"
+
+[lint]
+# E/F: pyflakes + pycodestyle, I: import sorting, UP: modern syntax, B: common bugs
+select = ["E", "F", "I", "UP", "B"]
+
+[lint.isort]
+known-first-party = ["regulens", "tests"]

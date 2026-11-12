@@ -6,7 +6,6 @@ which are never hard-coded.
 
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
 
 from pydantic import SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -24,10 +23,15 @@ class Settings(BaseSettings):
 
     database_url: str = "postgresql://regulens:regulens@localhost:5432/regulens"
 
-    # LLM settings are read now but only used from Phase 2.
-    llm_provider: Literal["anthropic", "openai"] = "anthropic"
-    anthropic_api_key: SecretStr | None = None
-    openai_api_key: SecretStr | None = None
+    # --- Retrieval ---
+    embedding_model: str = "nomic-ai/nomic-embed-text-v1.5-Q"
+    # Downloaded models live here (git-ignored), not in a temp folder that may be wiped.
+    model_cache_dir: Path = REPO_ROOT / ".cache" / "models"
+    # Which chunk index the API searches (see regulens/index_configs.py).
+    default_index: str = "baseline"
+
+    # --- LLM (used from Phase 2) ---
+    gemini_api_key: SecretStr | None = None
 
 
 @lru_cache

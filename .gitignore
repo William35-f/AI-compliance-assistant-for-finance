@@ -10,6 +10,9 @@ data/raw/*
 # Test fixtures we generate ourselves are allowed
 !backend/tests/fixtures/*.pdf
 
+# --- Downloaded models and other caches ---
+.cache/
+
 # --- Python ---
 __pycache__/
 *.py[cod]

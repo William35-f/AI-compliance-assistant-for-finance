@@ -14,8 +14,8 @@ import pytest
 from regulens import db
 from regulens.chunking import ChunkConfig
 from regulens.embeddings import HashingEmbedder
-from regulens.index_configs import IndexConfig
-from regulens.ingestion import ingest_source
+from regulens.index_configs import REPORT_MIN_SECTION_TOKENS, IndexConfig
+from regulens.ingestion import ingest_source, prune_index
 from regulens.sources import Source
 from tests.pdf_factory import TextItem, make_pdf
 
@@ -127,3 +127,15 @@ def test_rejects_mixing_embedding_models(conn: psycopg.Connection, pdf: Path) ->
 def test_requires_autocommit_connection(pdf: Path) -> None:
     with db.connect() as plain, pytest.raises(ValueError, match="autocommit"):
         ingest_source(plain, SOURCE, pdf, CONFIG, HashingEmbedder())
+
+
+def test_prune_removes_documents_missing_from_sources(conn: psycopg.Connection, pdf: Path) -> None:
+    ingest_source(conn, SOURCE, pdf, CONFIG, HashingEmbedder())
+    removed = prune_index(conn, CONFIG.name, keep_source_ids={"some_other_doc"})
+    assert removed == [SOURCE.id]
+    assert chunk_count(conn, CONFIG.name) == 0
+
+
+def test_annual_reports_merge_small_sections() -> None:
+    assert CONFIG.chunk_for("annual_report").min_section_tokens == REPORT_MIN_SECTION_TOKENS
+    assert CONFIG.chunk_for("regulation") == CONFIG.chunk

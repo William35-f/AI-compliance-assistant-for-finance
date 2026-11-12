@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from regulens.pdf_parser import is_heading, parse_pdf
+from regulens.pdf_parser import is_footnote_marker, is_heading, parse_pdf
 from tests.pdf_factory import TextItem, make_pdf
 
 BODY = 11
@@ -98,3 +98,16 @@ def test_drops_table_of_contents_pages(tmp_path: Path) -> None:
     paragraphs, _ = parse_pdf(pdf)
     assert [p.text for p in paragraphs] == ["Real body text."]
     assert paragraphs[0].page == 2
+
+
+@pytest.mark.parametrize(
+    ("text", "flags", "expected"),
+    [
+        ("19", 1, True),  # superscript footnote number
+        ("19", 0, False),  # ordinary number
+        ("TM", 1, False),  # superscript letters are not footnote markers
+        ("2021", 1, False),  # 4 digits: a year, not a marker
+    ],
+)
+def test_is_footnote_marker(text: str, flags: int, expected: bool) -> None:
+    assert is_footnote_marker({"text": text, "flags": flags}) is expected

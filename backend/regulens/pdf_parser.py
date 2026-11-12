@@ -24,7 +24,7 @@ from pathlib import Path
 import pymupdf
 
 # Bump this when parsing logic changes, so ingest.py knows to re-process files.
-PARSER_VERSION = "1"
+PARSER_VERSION = "2"  # 2: drop superscript footnote markers
 
 MARGIN_FRACTION = 0.10  # top/bottom 10% of a page counts as header/footer zone
 REPEAT_FRACTION = 0.30  # a margin line on >=30% of pages is a running header/footer
@@ -58,6 +58,15 @@ class _Line:
     in_margin: bool
 
 
+def is_footnote_marker(span: dict) -> bool:
+    """A superscript number glued to a word, e.g. the "19" in "notification19".
+
+    Left in, it turns "notification" into the token "notification19", which
+    full-text search can no longer match. PyMuPDF sets flag bit 1 on superscripts.
+    """
+    return bool(span["flags"] & 1) and bool(re.fullmatch(r"\s*\d{1,3}\s*", span["text"]))
+
+
 def _extract_lines(doc: pymupdf.Document) -> list[_Line]:
     lines: list[_Line] = []
     for page_index, page in enumerate(doc):
@@ -67,10 +76,11 @@ def _extract_lines(doc: pymupdf.Document) -> list[_Line]:
         page_dict = page.get_text("dict", sort=False)
         for block_no, block in enumerate(page_dict["blocks"]):
             for line in block.get("lines", []):
-                spans = [s for s in line["spans"] if s["text"].strip()]
+                kept_spans = [s for s in line["spans"] if not is_footnote_marker(s)]
+                spans = [s for s in kept_spans if s["text"].strip()]
                 if not spans:
                     continue
-                text = " ".join("".join(s["text"] for s in line["spans"]).split())
+                text = " ".join("".join(s["text"] for s in kept_spans).split())
                 # Use the font of the span that carries the most characters.
                 main = max(spans, key=lambda s: len(s["text"]))
                 bold = all(s["flags"] & 16 or _BOLD_FONT.search(s["font"]) for s in spans)

@@ -42,7 +42,7 @@ class Embedder(Protocol):
 class FastEmbedEmbedder:
     """Local embedding model run with fastembed (ONNX Runtime, CPU)."""
 
-    def __init__(self, model_name: str, cache_dir: str | None = None, batch_size: int = 16):
+    def __init__(self, model_name: str, cache_dir: str | None = None, batch_size: int = 8):
         os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
         from fastembed import TextEmbedding  # imported here: slow import, not needed in tests
 

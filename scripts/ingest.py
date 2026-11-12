@@ -16,7 +16,7 @@ from regulens import db
 from regulens.config import RAW_DIR, SOURCES_CSV, get_settings
 from regulens.embeddings import get_embedder
 from regulens.index_configs import INDEX_CONFIGS, get_index_config
-from regulens.ingestion import ingest_source
+from regulens.ingestion import ingest_source, prune_index
 from regulens.sources import load_sources
 
 
@@ -60,6 +60,9 @@ def main() -> int:
                 f"  {result.status:<8} {source.id:<28} {result.page_count:>4} pages "
                 f"{result.chunk_count:>5} chunks  {time.perf_counter() - t0:6.1f}s"
             )
+        if not args.source:  # full run: drop documents that left sources.csv
+            for removed in prune_index(conn, config.name, {s.id for s in sources}):
+                print(f"  pruned   {removed} (no longer in sources.csv)")
     print(
         f"\n{len(sources)} documents, {total_chunks} chunks in index '{config.name}' "
         f"({time.perf_counter() - started:.0f}s)"

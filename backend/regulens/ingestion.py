@@ -40,16 +40,16 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def fingerprint(pdf_sha: str, config: IndexConfig, embedder_name: str, title: str) -> str:
+def fingerprint(source: Source, pdf_sha: str, config: IndexConfig, embedder_name: str) -> str:
     """Hash of every input that changes the stored chunks."""
     payload = {
         "pdf": pdf_sha,
         "parser": PARSER_VERSION,
-        "chunk": asdict(config.chunk),
+        "chunk": asdict(config.chunk_for(source.doc_type)),
         "heading_in_embedding": config.heading_in_embedding,
         "embedder": embedder_name,
         # The title is embedded when heading_in_embedding is on.
-        "title": title if config.heading_in_embedding else None,
+        "title": source.title if config.heading_in_embedding else None,
     }
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
@@ -62,7 +62,13 @@ def embedding_text(chunk: Chunk, title: str, config: IndexConfig) -> str:
     return f"{context}\n{chunk.text}"
 
 
-def upsert_source(conn: psycopg.Connection, source: Source, page_count: int, sha: str) -> None:
+def upsert_source(
+    conn: psycopg.Connection, source: Source, page_count: int | None = None, sha: str | None = None
+) -> None:
+    """Insert or refresh a document's metadata from sources.csv.
+
+    page_count/sha are only known after parsing; when omitted, existing values are kept.
+    """
     conn.execute(
         """
         INSERT INTO sources (id, title, publisher, url, doc_type, date_downloaded,
@@ -71,7 +77,8 @@ def upsert_source(conn: psycopg.Connection, source: Source, page_count: int, sha
         ON CONFLICT (id) DO UPDATE SET
             title = EXCLUDED.title, publisher = EXCLUDED.publisher, url = EXCLUDED.url,
             doc_type = EXCLUDED.doc_type, date_downloaded = EXCLUDED.date_downloaded,
-            page_count = EXCLUDED.page_count, file_sha256 = EXCLUDED.file_sha256
+            page_count = COALESCE(EXCLUDED.page_count, sources.page_count),
+            file_sha256 = COALESCE(EXCLUDED.file_sha256, sources.file_sha256)
         """,
         (
             source.id,
@@ -114,8 +121,10 @@ def ingest_source(
     if not conn.autocommit:
         raise ValueError("ingest_source needs db.connect(autocommit=True)")
     register_vector(conn)
+    _check_same_model(conn, config.name, embedder.dim)  # fail fast, before slow work
+    upsert_source(conn, source)  # keep title/url etc. in sync with sources.csv
     sha = file_sha256(pdf_path)
-    fp = fingerprint(sha, config, embedder.name, source.title)
+    fp = fingerprint(source, sha, config, embedder.name)
 
     existing = conn.execute(
         "SELECT fingerprint, chunk_count FROM ingested_documents "
@@ -130,9 +139,9 @@ def ingest_source(
 
     # The slow part (parsing + embedding) happens before we open the write transaction.
     paragraphs, page_count = parse_pdf(pdf_path)
-    chunks = chunk_paragraphs(paragraphs, config.chunk, count_tokens=embedder.count_tokens)
+    chunk_config = config.chunk_for(source.doc_type)
+    chunks = chunk_paragraphs(paragraphs, chunk_config, count_tokens=embedder.count_tokens)
     vectors = embedder.embed_documents([embedding_text(c, source.title, config) for c in chunks])
-    _check_same_model(conn, config.name, embedder.dim)
 
     with conn.transaction():
         upsert_source(conn, source, page_count, sha)
@@ -173,3 +182,19 @@ def ingest_source(
             (config.name, source.id, fp, len(chunks)),
         )
     return IngestResult(source.id, "ingested", len(chunks), page_count)
+
+
+def prune_index(conn: psycopg.Connection, index_name: str, keep_source_ids: set[str]) -> list[str]:
+    """Delete chunks of documents that are no longer in sources.csv. Returns removed ids."""
+    rows = conn.execute(
+        "SELECT source_id FROM ingested_documents WHERE index_name = %s", (index_name,)
+    ).fetchall()
+    removed = sorted({r[0] for r in rows} - keep_source_ids)
+    with conn.transaction():
+        for source_id in removed:
+            for table in ("chunks", "ingested_documents"):
+                conn.execute(
+                    f"DELETE FROM {table} WHERE index_name = %s AND source_id = %s",
+                    (index_name, source_id),
+                )
+    return removed

@@ -1,0 +1,33 @@
+# --- Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Source documents (copyrighted PDFs: never commit, only data/sources.csv) ---
+data/raw/*
+!data/raw/.gitkeep
+*.pdf
+# Test fixtures we generate ourselves are allowed
+!backend/tests/fixtures/*.pdf
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# --- Node / frontend ---
+node_modules/
+frontend/dist/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

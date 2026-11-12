@@ -1,0 +1,30 @@
+# Local development services.
+# Phase 0: only Postgres runs in Docker. The FastAPI app runs on your machine
+# with `uvicorn --reload` so code changes show up instantly. A backend
+# Dockerfile is added in Phase 6 for deployment.
+#
+# Values come from .env in the repo root (copy .env.example first).
+
+services:
+  db:
+    # Official Postgres 16 image with the pgvector extension pre-installed.
+    image: pgvector/pgvector:pg16
+    container_name: regulens-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-regulens}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-regulens}
+      POSTGRES_DB: ${POSTGRES_DB:-regulens}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Named volume so data survives `docker compose down` (use `down -v` to wipe).
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

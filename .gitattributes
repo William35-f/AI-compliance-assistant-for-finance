@@ -1,0 +1,4 @@
+# Normalise line endings so Windows and Linux (CI, Docker) see the same files.
+* text=auto
+*.sh text eol=lf
+*.pdf binary

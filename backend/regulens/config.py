@@ -27,12 +27,20 @@ class Settings(BaseSettings):
     embedding_model: str = "nomic-ai/nomic-embed-text-v1.5-Q"
     # Downloaded models live here (git-ignored), not in a temp folder that may be wiped.
     model_cache_dir: Path = REPO_ROOT / ".cache" / "models"
-    # Which chunk index the API searches (see regulens/index_configs.py).
-    default_index: str = "baseline"
-
+    # Defaults below are the winners of the Phase 4 experiments (README "Experiments"):
+    # the "heading" index (document title + section heading embedded with each chunk)
+    # searched in hybrid mode (vector + BM25 merged with reciprocal rank fusion).
+    default_index: str = "heading"
+    retrieval_mode: str = "hybrid"  # vector | fts | hybrid (see regulens/retrieval.py)
     retrieval_k: int = 5
+    # The cross-encoder reranker did NOT help on top of heading + hybrid and costs ~1.3 s per query.
+    rerank: bool = False
+    reranker_model: str = "jinaai/jina-reranker-v1-turbo-en"
     # Refuse without calling the LLM when the best chunk's cosine similarity is below this.
-    min_retrieval_score: float = 0.5
+    # Calibrated on the eval set: lowest in-scope score 0.656 (paraphrased) / 0.706; clearly
+    # unrelated questions score 0.52-0.58. Near-domain questions (e.g. EU AI Act, 0.737) can't
+    # be separated by similarity; the LLM's "answerable: false" handles those.
+    min_retrieval_score: float = 0.60
 
     # --- LLM: Google Gemini ---
     gemini_api_key: SecretStr | None = None

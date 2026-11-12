@@ -33,7 +33,8 @@ from regulens.evaluation import (
 )
 from regulens.index_configs import INDEX_CONFIGS
 from regulens.llm import LLMQuotaExceeded, make_llm
-from regulens.qa import QAConfig, answer_question
+from regulens.qa import QAConfig, answer_question, top_similarity
+from regulens.reranker import get_reranker
 from regulens.retrieval import RETRIEVAL_MODES, RetrievalConfig, retrieve
 
 EVAL_DIR = Path(__file__).resolve().parent
@@ -48,6 +49,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--index", default=settings.default_index, choices=INDEX_CONFIGS)
     p.add_argument("--mode", default="vector", choices=RETRIEVAL_MODES)
     p.add_argument("--k", type=int, default=settings.retrieval_k)
+    p.add_argument("--rerank", action="store_true", help="re-order candidates with a cross-encoder")
+    p.add_argument("--candidates", type=int, default=30, help="per-ranker list length (hybrid)")
     p.add_argument("--min-score", type=float, default=settings.min_retrieval_score)
     p.add_argument("--limit", type=int, help="only the first N questions")
     p.add_argument("--category", choices=["factual", "multi-hop", "out_of_scope"])
@@ -66,7 +69,14 @@ def main() -> int:
     if args.limit:
         questions = questions[: args.limit]
 
-    retrieval = RetrievalConfig(index_name=args.index, k=args.k, mode=args.mode)
+    retrieval = RetrievalConfig(
+        index_name=args.index,
+        k=args.k,
+        mode=args.mode,
+        rerank=args.rerank,
+        candidates=args.candidates,
+    )
+    reranker = get_reranker() if args.rerank else None
     qa_config = QAConfig(retrieval=retrieval, min_retrieval_score=args.min_score)
     embedder = get_embedder()
     answer_llm = judge_llm = None
@@ -84,7 +94,7 @@ def main() -> int:
             in_scope = q.category != "out_of_scope"
             try:
                 if args.retrieval_only:
-                    chunks = retrieve(conn, embedder, q.question, retrieval)
+                    chunks = retrieve(conn, embedder, q.question, retrieval, reranker)
                     retrieved = [
                         ChunkLocation(
                             chunk_id=c.id,
@@ -103,7 +113,7 @@ def main() -> int:
                         answer="",
                         refused=False,
                         refusal_reason=None,
-                        top_score=chunks[0].score if chunks else None,
+                        top_score=top_similarity(chunks),
                         retrieved=retrieved,
                         retrieval_hit=hit,
                         reciprocal_rank=rr,
@@ -112,7 +122,13 @@ def main() -> int:
                 else:
                     assert answer_llm is not None and judge_llm is not None
                     response = answer_question(
-                        conn, q.question, embedder, answer_llm, qa_config, log_origin="eval"
+                        conn,
+                        q.question,
+                        embedder,
+                        answer_llm,
+                        qa_config,
+                        log_origin="eval",
+                        reranker=reranker,
                     )
                     retrieved = chunk_locations(conn, response.retrieved_chunk_ids)
                     hit, rr = retrieval_scores(q, retrieved) if in_scope else (None, None)
@@ -177,6 +193,9 @@ def main() -> int:
                 "index": args.index,
                 "mode": args.mode,
                 "k": args.k,
+                "rerank": args.rerank,
+                "reranker_model": settings.reranker_model if args.rerank else None,
+                "candidates": args.candidates,
                 "min_retrieval_score": args.min_score,
                 "retrieval_only": args.retrieval_only,
                 "answer_model": None if args.retrieval_only else settings.gemini_model,

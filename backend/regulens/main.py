@@ -17,6 +17,7 @@ from regulens.config import get_settings
 from regulens.embeddings import Embedder, get_embedder
 from regulens.llm import LLMClient, LLMError, LLMQuotaExceeded, make_llm
 from regulens.qa import AskResponse, QAConfig, answer_question
+from regulens.reranker import Reranker, get_reranker
 from regulens.retrieval import RetrievalConfig
 
 logger = logging.getLogger("regulens")
@@ -63,9 +64,19 @@ def get_llm() -> LLMClient:
 def get_qa_config() -> QAConfig:
     settings = get_settings()
     return QAConfig(
-        retrieval=RetrievalConfig(index_name=settings.default_index, k=settings.retrieval_k),
+        retrieval=RetrievalConfig(
+            mode=settings.retrieval_mode,
+            index_name=settings.default_index,
+            k=settings.retrieval_k,
+            rerank=settings.rerank,
+        ),
         min_retrieval_score=settings.min_retrieval_score,
     )
+
+
+def get_optional_reranker() -> Reranker | None:
+    """Load the cross-encoder only when reranking is switched on."""
+    return get_reranker() if get_settings().rerank else None
 
 
 # --------------------------------------------------------------------------- endpoints
@@ -109,10 +120,13 @@ def ask(
     embedder: Annotated[Embedder, Depends(get_embedder)],
     llm: Annotated[LLMClient, Depends(get_llm)],
     config: Annotated[QAConfig, Depends(get_qa_config)],
+    reranker: Annotated[Reranker | None, Depends(get_optional_reranker)],
 ) -> AskResponse:
     """Answer a question about MAS guidelines, with a citation for every claim."""
     try:
-        return answer_question(conn, request.question.strip(), embedder, llm, config)
+        return answer_question(
+            conn, request.question.strip(), embedder, llm, config, reranker=reranker
+        )
     except LLMQuotaExceeded as exc:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(exc)) from exc
     except LLMError as exc:

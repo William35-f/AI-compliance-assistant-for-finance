@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 
 from regulens.embeddings import Embedder
 from regulens.llm import LLMClient, LLMUsage, estimate_cost_usd
+from regulens.reranker import Reranker
 from regulens.retrieval import RetrievalConfig, RetrievedChunk, retrieve
 
 REFUSAL_TEXT = "I couldn't find this in the sources."
@@ -153,6 +154,11 @@ def verify_quote(quote: str, chunk_text: str) -> tuple[str, bool]:
     return best.strip(), False
 
 
+def top_similarity(chunks: list[RetrievedChunk]) -> float | None:
+    """Best cosine similarity among the chunks (the guardrail's signal in every mode)."""
+    return max((c.similarity for c in chunks), default=None)
+
+
 def _refusal(reason: str, chunks: list[RetrievedChunk], **kwargs) -> AskResponse:
     return AskResponse(
         answer=REFUSAL_TEXT,
@@ -160,7 +166,7 @@ def _refusal(reason: str, chunks: list[RetrievedChunk], **kwargs) -> AskResponse
         refused=True,
         refusal_reason=reason,
         retrieved_chunk_ids=[c.id for c in chunks],
-        top_score=chunks[0].score if chunks else None,
+        top_score=top_similarity(chunks),
         **kwargs,
     )
 
@@ -215,14 +221,16 @@ def answer_question(
     llm: LLMClient,
     config: QAConfig | None = None,
     log_origin: str | None = "api",
+    reranker: Reranker | None = None,
 ) -> AskResponse:
     """Answer one question. `log_origin=None` skips logging (used in tests)."""
     config = config or QAConfig()
     started = time.perf_counter()
-    chunks = retrieve(conn, embedder, question, config.retrieval)
+    chunks = retrieve(conn, embedder, question, config.retrieval, reranker)
     usage: LLMUsage | None = None
+    best = top_similarity(chunks)
 
-    if not chunks or chunks[0].score < config.min_retrieval_score:
+    if best is None or best < config.min_retrieval_score:
         response = _refusal(
             "low_retrieval_score",
             chunks,
@@ -262,7 +270,7 @@ def answer_question(
                 citations=citations,
                 refused=False,
                 retrieved_chunk_ids=[c.id for c in chunks],
-                top_score=chunks[0].score,
+                top_score=best,
                 latency_ms=0,
                 tokens=tokens,
                 cost_usd=cost,

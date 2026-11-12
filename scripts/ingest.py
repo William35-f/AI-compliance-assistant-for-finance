@@ -24,6 +24,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Ingest source PDFs into pgvector.")
     parser.add_argument("--index", default=get_settings().default_index, choices=INDEX_CONFIGS)
     parser.add_argument("--source", action="append", help="only this source id (repeatable)")
+    parser.add_argument(
+        "--doc-type", choices=["regulation", "annual_report"], help="only this document type"
+    )
     parser.add_argument("--force", action="store_true", help="re-ingest unchanged documents")
     args = parser.parse_args()
 
@@ -35,6 +38,8 @@ def main() -> int:
             print(f"Unknown source id(s): {sorted(unknown)}")
             return 1
         sources = [s for s in sources if s.id in args.source]
+    if args.doc_type:
+        sources = [s for s in sources if s.doc_type == args.doc_type]
 
     print(f"Index '{config.name}': {config}")
     print("Loading embedding model...")
@@ -60,7 +65,7 @@ def main() -> int:
                 f"  {result.status:<8} {source.id:<28} {result.page_count:>4} pages "
                 f"{result.chunk_count:>5} chunks  {time.perf_counter() - t0:6.1f}s"
             )
-        if not args.source:  # full run: drop documents that left sources.csv
+        if not args.source and not args.doc_type:  # full run: drop docs that left sources.csv
             for removed in prune_index(conn, config.name, {s.id for s in sources}):
                 print(f"  pruned   {removed} (no longer in sources.csv)")
     print(

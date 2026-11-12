@@ -27,7 +27,9 @@ CHUNK_TEXT = (
 
 
 def chunk(id_: int = 1, text: str = CHUNK_TEXT) -> RetrievedChunk:
-    return RetrievedChunk(id_, "doc", "Doc Title", "regulation", 3, 4, "1 Notification", text, 0.8)
+    return RetrievedChunk(
+        id_, "doc", "Doc Title", "regulation", 3, 4, "1 Notification", text, 0.8, 0.8
+    )
 
 
 def claim(text: str, *cites: tuple[str, str]) -> LLMClaim:

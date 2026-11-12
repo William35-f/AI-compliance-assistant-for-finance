@@ -36,6 +36,11 @@ INDEX_CONFIGS: dict[str, IndexConfig] = {
     cfg.name: cfg
     for cfg in [
         IndexConfig("baseline", ChunkConfig(chunk_size=600, overlap=100)),
+        # Phase 4 experiments: change ONE thing at a time relative to "baseline".
+        IndexConfig("c300_o50", ChunkConfig(chunk_size=300, overlap=50)),
+        IndexConfig("c800_o150", ChunkConfig(chunk_size=800, overlap=150)),
+        IndexConfig("c600_o0", ChunkConfig(chunk_size=600, overlap=0)),
+        IndexConfig("heading", ChunkConfig(chunk_size=600, overlap=100), heading_in_embedding=True),
     ]
 }
 

@@ -57,6 +57,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--retrieval-only", action="store_true", help="skip the LLM (hit@k, MRR)")
     p.add_argument("--notes", default="", help="free text for the summary row")
     p.add_argument("--no-summary", action="store_true", help="don't append to summary.md")
+    p.add_argument(
+        "--fail-under",
+        type=float,
+        help="exit with code 1 if answer correctness is below this (used by CI)",
+    )
     return p.parse_args()
 
 
@@ -218,7 +223,15 @@ def main() -> int:
     for key, value in metrics.items():
         print(f"  {key:<22} {value}")
     print(f"\nSaved {out.relative_to(EVAL_DIR.parent)}")
-    return 1 if stopped_early else 0
+    if stopped_early:
+        return 1
+    if args.fail_under is not None:
+        correctness = metrics.get("answer_correctness")
+        if correctness is None or correctness < args.fail_under:
+            print(f"FAIL: answer correctness {correctness} is below {args.fail_under}")
+            return 1
+        print(f"OK: answer correctness {correctness:.3f} >= {args.fail_under}")
+    return 0
 
 
 if __name__ == "__main__":

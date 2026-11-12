@@ -1,72 +1,63 @@
 # ReguLens
 
-**An AI assistant for Singapore financial compliance.** ReguLens answers questions about
-MAS (Monetary Authority of Singapore) guidelines using only retrieved passages, with a
-document-and-page citation for every claim. It extracts key figures (revenue, net profit,
-total debt, risk disclosures) from SGX-listed companies' annual reports into validated JSON,
-and flags risk disclosures that may need checking against MAS guidelines, for a human to review.
+**An AI assistant for Singapore financial compliance.** ReguLens answers questions about MAS
+(Monetary Authority of Singapore) guidelines using only retrieved passages, and backs every claim
+with a document, page and verbatim quote that the code checks against the source. It extracts
+revenue, net profit, total debt and key risk disclosures from SGX-listed companies' annual reports,
+converting units and verifying each number on the cited financial-statement page. A small agent
+then links each disclosed risk to the relevant MAS guideline sections and flags possible gaps for
+a human to review. Retrieval quality was improved with measured, one-change-at-a-time experiments
+(hit@5 **0.80 → 0.95** on 80 questions).
 
-> Status: **Phases 0-1 complete; Phases 2-3 built, waiting for a Gemini API key for live runs.** See [PROGRESS.md](PROGRESS.md)
-> for the detailed build log, design decisions and (once measured) evaluation results.
+**Live demo:** _not deployed yet_ (see [DEPLOY.md](DEPLOY.md)) · **Build log and decisions:** [PROGRESS.md](PROGRESS.md)
 
-## Progress
+## Architecture
 
-| Phase | Status |
-|---|---|
-| 0. Setup (Docker, Postgres + pgvector, FastAPI `/health`, sources registry) | ✅ Done |
-| 1. Ingestion pipeline | ✅ Done |
-| 2. Q&A with citations | 🟡 Built, needs Gemini key for a live check |
-| 3. Evaluation harness | 🟡 Built, retrieval baseline measured |
-| 4. Retrieval experiments | ✅ Done (retrieval metrics) |
-| 5. Report extraction and risk agent | ⬜ Not started |
-| 6. Frontend, CI and deployment | ⬜ Not started |
+```mermaid
+flowchart LR
+    subgraph Offline["Offline ingestion (scripts/ingest.py)"]
+        PDF["MAS + SGX PDFs"] --> PARSE["PyMuPDF parser<br/>page + nearest heading"]
+        PARSE --> CHUNK["Section-aware chunker<br/>600 tokens, 100 overlap"]
+        CHUNK --> EMB["nomic-embed-text v1.5<br/>local ONNX, title+heading prepended"]
+    end
+    EMB --> DB[("Postgres 16 + pgvector<br/>vectors + tsvector index")]
 
-### Phase 1: Ingestion pipeline
+    UI["React app<br/>Ask / Extract / Stats"] --> API["FastAPI<br/>rate limits + caches"]
 
-**Step 1: collect the source documents**
+    API -- "/ask" --> RET["Hybrid retrieval<br/>vector + BM25 (SQL), RRF"]
+    RET --> DB
+    RET --> GATE{"best similarity<br/>at least 0.60?"}
+    GATE -- no --> REFUSE["Refuse: not in sources"]
+    GATE -- yes --> LLM["Gemini: JSON claims<br/>with passage ids + quotes"]
+    LLM --> CHECK["Code checks: cited ids exist,<br/>quotes verbatim, drop uncited claims"]
 
-- [x] Download 10 MAS guideline PDFs into `data/raw/<id>.pdf` (10 / 10)
-- [x] Download 5 SGX annual reports into `data/raw/<id>.pdf` (5 / 5: DBS, OCBC, Singtel, Keppel, Sheng Siong)
-- [x] Add one row per document to `data/sources.csv`
-- [x] `python scripts/check_sources.py` prints "All good"
-- [x] `scripts/download_sources.py` re-downloads all PDFs from `sources.csv` in one command
-- [x] Decide the LLM provider (Gemini, free key) and the embedding option (local nomic-embed-text-v1.5)
+    API -- "/extract" --> PAGES["Page selector<br/>statements + risk pages"]
+    PAGES --> LLM2["Gemini: numbers as printed,<br/>unit labels, pages"]
+    LLM2 --> VERIFY["Code: units to full amounts,<br/>sum debt, verify on page"]
 
-**Step 2: build the pipeline (with Claude)**
+    API -- "/risk-check" --> AGENT["Agent loop, max 3 steps<br/>tool: search_guidelines"]
+    AGENT --> RET
+```
 
-- [x] Parse PDFs with PyMuPDF, keeping the page number and nearest section heading
-- [x] Section-aware chunker (~500–800 tokens, with overlap, configurable size)
-- [x] Unit tests for the chunker
-- [x] Swappable embedder (same small-interface idea as the LLM)
-- [x] `chunks` table in pgvector with metadata (source_id, page, heading, text) + full-text index
-- [x] `scripts/ingest.py` is idempotent (re-running creates no duplicates)
-- [x] Ingest all documents and record chunk counts in PROGRESS.md (15 docs, 2,360 chunks)
+Key ideas:
+- **The LLM reads; code checks.** Citations, quotes, units and arithmetic are verified in Python,
+  so a hallucinated quote or a misread unit is caught instead of shown as fact.
+- **Two-stage refusal.** A similarity threshold refuses clearly unrelated questions without an
+  LLM call; the model's own "not answerable" flag handles near-domain ones.
+- **Everything measured.** An eval harness with 90 hand-checked questions, an LLM judge, a
+  judge-vs-human agreement check, confidence intervals and a CI quality gate.
 
-### Phase 2: Q&A with citations
+## Evaluation results
 
-- [x] `POST /ask` with vector retrieval (k = 5) and Gemini behind a swappable interface
-- [x] Answers as claims with chunk citations + verbatim quotes, validated by Pydantic
-- [x] Quotes verified against the source text; refusal guardrails; not-legal-advice disclaimer
-- [x] Every query logged to `query_logs`
-- [ ] Live check against Gemini (needs `GEMINI_API_KEY` in `.env`)
+Only numbers produced by the scripts appear here (full log: [eval/results/summary.md](eval/results/summary.md)).
 
-### Phase 3: Evaluation harness
+| Config | hit@5 | MRR | Answer correctness | Citation accuracy | Out-of-scope refusal | p50 / p95 latency |
+|---|---|---|---|---|---|---|
+| Baseline: vector, k = 5 | 0.800 | 0.669 | pending Gemini run | pending | pending | pending |
+| **Chosen: heading embedding + hybrid, k = 5** | **0.950** | **0.819** | pending Gemini run | pending | pending | pending |
 
-- [x] 90 eval questions (72 factual, 8 multi-hop, 10 out-of-scope) with expected pages
-- [x] `eval/run_eval.py`: hit@k, MRR, judged correctness, citation accuracy, refusals, latency, cost
-- [x] `eval/judge_agreement.py` for checking the LLM judge against a human
-- [x] Retrieval baseline: hit@5 = 0.800, MRR = 0.669
-- [ ] Full LLM-judged baseline (needs the Gemini key)
-- [ ] Judge-human agreement on 20 sampled answers
-
-### Phase 4: Retrieval experiments
-
-- [x] BM25 keyword search in SQL, hybrid search with reciprocal rank fusion, optional cross-encoder reranker
-- [x] Chunk size / overlap variants and heading-in-embedding variant, one change at a time
-- [x] Paraphrased question set to check for lexical bias in the eval
-- [x] Confidence intervals and paired wins/losses (`eval/compare_runs.py`)
-- [x] Winner: heading embedding + hybrid (hit@5 0.800 to 0.950); reranker and chunk-size changes did not help
-- [ ] Full LLM-judged comparison of baseline vs chosen config (needs the Gemini key)
+Extraction accuracy on the 5 annual reports (`eval/run_extraction_eval.py`): pending Gemini run.
+Page selection already finds the correct statement page for **15 of 15** fields (tested).
 
 ## Experiments (Phase 4)
 
@@ -126,68 +117,155 @@ telling the bank it brought in another company?" instead of "sub-contractor noti
   questions scored 0.52-0.58. Near-domain out-of-scope questions (EU AI Act 0.737, Notice 637
   0.712) can't be separated by similarity, so the LLM's "not answerable" signal handles them.
 
-## Tech stack
-
-Python 3.11+ · FastAPI · Pydantic v2 · Postgres 16 + pgvector (Docker Compose) · PyMuPDF ·
-hybrid retrieval (full-text + vector, reciprocal rank fusion, optional cross-encoder reranker) ·
-OpenAI or Anthropic LLM behind one small interface · React (Vite + TypeScript) · pytest ·
-GitHub Actions
-
 ## Run it locally
 
-Prerequisites: Python 3.11+, Docker Desktop, Git.
+Prerequisites: Python 3.11+, Node 20+, Docker Desktop, a free Gemini API key
+(<https://aistudio.google.com/apikey>).
 
 ```powershell
-# 1. Configuration: copy the example and fill in API keys later (Phase 2)
+# 1. Configuration: copy the example and put your key in GEMINI_API_KEY
 copy .env.example .env
 
-# 2. Start Postgres + pgvector
+# 2. Postgres + pgvector
 docker compose up -d --wait
 
-# 3. Create a virtual environment and install the backend
+# 3. Backend
 python -m venv .venv
-.venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
+.venv\Scripts\activate                       # macOS/Linux: source .venv/bin/activate
 pip install -e "backend[dev]"
 
-# 4. Run the API (use --port 8001 if port 8000 is already taken)
-uvicorn regulens.main:app --reload
-# then open http://127.0.0.1:8000/health or http://127.0.0.1:8000/docs
+# 4. Documents and index (PDFs are not in git; ~5 minutes the first time)
+python scripts/download_sources.py           # 10 MAS documents + 5 annual reports
+python scripts/check_sources.py
+python scripts/ingest.py --index heading --doc-type regulation   # what /ask searches
 
-# 5. Run the tests and the linter
-pytest backend
-ruff check backend scripts
+# 5. API (use another port if 8001 is taken)
+uvicorn regulens.main:app --reload --port 8001   # docs at http://127.0.0.1:8001/docs
+
+# 6. Frontend, in a second terminal
+cd frontend; npm install; npm run dev        # http://localhost:5173
+
+# 7. Tests, lint, evals
+pytest backend                               # 125 tests; live Gemini tests run with -m live
+ruff check backend scripts eval
+python eval/run_eval.py --name my-run --retrieval-only   # free, no LLM calls
+python eval/run_eval.py --name my-run                    # full run, uses Gemini
+python eval/run_extraction_eval.py
 ```
 
-If PowerShell refuses to run `activate`, either run
-`Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, or call the tools directly,
-for example `.venv\Scripts\python -m pytest backend`.
+If PowerShell refuses to run `activate`, run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+once, or call tools directly, for example `.venv\Scripts\python -m pytest backend`.
 
-## Source documents
+Or run everything in one container: `docker build -t regulens .` then
+`docker run -p 8000:8000 --env-file .env -e DATABASE_URL=postgresql://regulens:regulens@host.docker.internal:5432/regulens regulens`.
 
-PDFs are **not** committed (they are copyrighted). The registry of documents is
-[data/sources.csv](data/sources.csv) (10 MAS guidelines + 5 SGX annual reports); each row's
-PDF is saved as `data/raw/<id>.pdf`. Download them all and check the registry with:
+## API
 
-```powershell
-python scripts/download_sources.py   # fetches any missing PDFs from the URLs in sources.csv
-python scripts/check_sources.py      # every row has a PDF and every PDF has a row
-```
+| Endpoint | What it does |
+|---|---|
+| `POST /ask` `{question}` | Answer + citations `[{source_id, title, page, quote, quote_verified}]`, retrieved chunk ids, latency, tokens, estimated cost, disclaimer |
+| `POST /extract` (PDF upload or `source_id`) | Company, fiscal year, currency, revenue, net profit, total debt (with components), key risks; each with page + verification flag |
+| `POST /risk-check` `{risks}` or `{source_id}` | Per risk: related MAS guideline passages with quotes, assessment, `needs_human_review` |
+| `GET /stats` | Query count, p50/p95 latency, average cost, refusals, cache hits, latest eval scores |
+| `GET /sources`, `GET /health` | Document registry; liveness/readiness (503 if the database is down) |
+
+## Limitations
+
+- **Small, self-written eval set.** 90 + 20 questions, drafted from the PDFs by the assistant that
+  built the system and checked against the source pages; differences under ~5 points are noise,
+  and an independent human review of the questions is still worth doing.
+- **LLM judge bias.** The judge is a Gemini model grading Gemini answers; `eval/judge_agreement.py`
+  measures agreement with a human on a sample to keep it honest.
+- **Free-tier constraints.** Gemini's free quota allows a few hundred requests a day, which limits
+  how many full evals and demo queries can run; costs shown are estimates at paid list prices.
+- **PDF heuristics.** Heading detection and statement-page selection are rules tuned on these
+  documents. Scanned PDFs (no text layer) are not supported, and complex tables can be misread;
+  every extracted number is therefore verified on its page and flagged when it can't be.
+- **Definitions are choices.** "Total debt" means borrowings + debt securities issued, excluding
+  leases and deposits (for banks, debt securities only). Other definitions would give other numbers.
+- **Single process.** Rate limits and in-memory caches are per process; multiple replicas would
+  need Redis.
+
+## Future work
+
+- OCR fallback for scanned reports and a table-aware parser for financial statements.
+- Larger, human-written eval set, including real user questions from `query_logs`.
+- Track document versions (MAS revises guidelines) and re-ingest on change.
+- Weighted fusion or a fine-tuned reranker, evaluated on paraphrased questions.
+- Streaming answers in the UI; per-user auth and quotas.
 
 ## Repository layout
 
 ```
-backend/     FastAPI app (package `regulens`) and its tests
-frontend/    React app (Phase 6)
-eval/        evaluation questions, scripts and results (Phase 3)
-data/        sources.csv (committed) and raw/ PDFs (git-ignored)
-scripts/     command-line tools (source checks, ingestion)
+backend/     FastAPI app (package `regulens`) and 125 tests
+frontend/    React + TypeScript app (Ask, Extract, Stats)
+eval/        questions, extraction truth, eval scripts and saved results
+data/        sources.csv (committed); raw/ PDFs (git-ignored, see scripts/download_sources.py)
+scripts/     download_sources, check_sources, ingest
+Dockerfile   one image: API + built frontend + embedding model
+DEPLOY.md    step-by-step deployment to Render + Neon
 ```
 
-## Evaluation results
+## Progress
 
-Only numbers produced by `eval/run_eval.py` appear here (full log: [eval/results/summary.md](eval/results/summary.md)).
+| Phase | Status |
+|---|---|
+| 0. Setup (Docker, Postgres + pgvector, FastAPI `/health`, sources registry) | ✅ Done |
+| 1. Ingestion pipeline | ✅ Done |
+| 2. Q&A with citations | 🟡 Built and tested with a fake LLM; live Gemini check pending the API key |
+| 3. Evaluation harness | 🟡 Built; retrieval baseline measured; LLM-judged runs pending the API key |
+| 4. Retrieval experiments | ✅ Done (retrieval metrics) |
+| 5. Report extraction and risk agent | 🟡 Built and tested; accuracy run pending the API key |
+| 6. Frontend, CI and deployment | 🟡 Built; deployment needs your Render/Neon accounts |
 
-| Config | hit@5 | MRR | Answer correctness | Citation accuracy | OOS refusal |
-|---|---|---|---|---|---|
-| Vector only, k = 5 (baseline) | 0.800 | 0.669 | pending Gemini key | pending | pending |
-| Heading embedding + hybrid, k = 5 (chosen) | 0.950 | 0.819 | pending Gemini key | pending | pending |
+<details>
+<summary>Checklist by phase</summary>
+
+### Phase 1: Ingestion pipeline
+- [x] 10 MAS guideline PDFs and 5 SGX annual reports in `data/raw/`, registered in `sources.csv`
+- [x] `scripts/download_sources.py` and `scripts/check_sources.py`
+- [x] LLM provider: Gemini (free key); embeddings: local nomic-embed-text-v1.5
+- [x] PyMuPDF parsing with page numbers and nearest headings
+- [x] Section-aware chunker (configurable size and overlap) with unit tests
+- [x] Swappable embedder; `chunks` table with pgvector + full-text index
+- [x] Idempotent `scripts/ingest.py` (15 docs, 2,360 chunks)
+
+### Phase 2: Q&A with citations
+- [x] `POST /ask` with retrieval + Gemini behind a swappable interface
+- [x] Claims with chunk citations + verbatim quotes, validated by Pydantic and checked in code
+- [x] Refusal guardrails; not-legal-advice disclaimer; every query logged to `query_logs`
+- [ ] Live check against Gemini (needs `GEMINI_API_KEY` in `.env`)
+
+### Phase 3: Evaluation harness
+- [x] 90 eval questions (72 factual, 8 multi-hop, 10 out-of-scope) with expected pages
+- [x] `eval/run_eval.py`: hit@k, MRR, judged correctness, citation accuracy, refusals, latency, cost
+- [x] `eval/judge_agreement.py` for checking the LLM judge against a human
+- [x] Retrieval baseline: hit@5 = 0.800, MRR = 0.669
+- [ ] Full LLM-judged baseline (needs the Gemini key)
+- [ ] Judge-human agreement on 20 sampled answers
+
+### Phase 4: Retrieval experiments
+- [x] BM25 in SQL, hybrid search with reciprocal rank fusion, optional cross-encoder reranker
+- [x] Chunk size / overlap variants and heading-in-embedding variant, one change at a time
+- [x] Paraphrased question set to check for lexical bias in the eval
+- [x] Confidence intervals and paired wins/losses (`eval/compare_runs.py`)
+- [x] Winner: heading embedding + hybrid (hit@5 0.800 to 0.950); reranker and chunk-size changes did not help
+- [ ] Full LLM-judged comparison of baseline vs chosen config (needs the Gemini key)
+
+### Phase 5: Report extraction and risk agent
+- [x] Ground truth for the 5 reports, read from their audited statements (`eval/extraction_truth.jsonl`)
+- [x] Page selection finds the right statement page for 15/15 fields
+- [x] `POST /extract`: LLM copies numbers + unit labels; code converts units, sums debt, verifies on page
+- [x] `POST /risk-check`: plain-Python agent loop (max 3 steps) with a guideline search tool
+- [x] Prompt-injection defences tested (an injected number can never pass verification)
+- [ ] Extraction accuracy run and live injection test (need the Gemini key)
+
+### Phase 6: Frontend, CI and deployment
+- [x] React app: Ask (clickable citations), Extract (table + risk check), Stats
+- [x] Rate limiting; caches for repeated questions and query embeddings
+- [x] GitHub Actions: lint, tests with pgvector, frontend build, 20-question smoke eval gate
+- [x] Dockerfile (one image: API + frontend + embedding model) and [DEPLOY.md](DEPLOY.md)
+- [ ] Deploy to Render + Neon (needs your accounts) and add the live demo link
+- [ ] Add the `GEMINI_API_KEY` repository secret so the CI smoke eval runs
+
+</details>

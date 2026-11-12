@@ -42,11 +42,17 @@ def download(source: Source, dest: Path) -> int:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--force", action="store_true", help="re-download existing files")
+    parser.add_argument(
+        "--doc-type", choices=["regulation", "annual_report"], help="only this type"
+    )
     args = parser.parse_args()
 
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     failures = 0
-    for source in load_sources(SOURCES_CSV):
+    sources = load_sources(SOURCES_CSV)
+    if args.doc_type:
+        sources = [s for s in sources if s.doc_type == args.doc_type]
+    for source in sources:
         dest = source.pdf_path(RAW_DIR)
         if dest.exists() and not args.force:
             print(f"  skip  {source.id} (already downloaded)")

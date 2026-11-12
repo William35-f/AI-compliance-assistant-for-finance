@@ -31,6 +31,7 @@ from regulens.protection import (
     rate_limit,
 )
 from regulens.qa import AskResponse, QAConfig, answer_question, log_query
+from regulens.report_pages import ReportTooLarge
 from regulens.reranker import Reranker, get_reranker
 from regulens.retrieval import RetrievalConfig
 from regulens.risk_agent import RiskCheckResult, check_risks
@@ -199,6 +200,8 @@ def _report_path(source_id: str) -> Path:
 def _run_extraction(path: Path, llm: LLMClient, source_id: str | None) -> ExtractionResult:
     try:
         return extract_report(path, llm, source_id=source_id)
+    except ReportTooLarge as exc:
+        raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, str(exc)) from exc
     except LLMQuotaExceeded as exc:
         raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS, str(exc)) from exc
     except LLMError as exc:

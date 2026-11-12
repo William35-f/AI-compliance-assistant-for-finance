@@ -110,3 +110,27 @@ def test_stats_reports_usage_and_eval(client: TestClient) -> None:
 def test_sources_endpoint_lists_annual_reports(client: TestClient) -> None:
     body = client.get("/sources", params={"doc_type": "annual_report"}).json()
     assert all(item["doc_type"] == "annual_report" for item in body)
+
+
+def test_client_key_uses_the_proxy_appended_ip() -> None:
+    from starlette.requests import Request
+
+    from regulens.protection import client_key
+
+    scope = {
+        "type": "http",
+        "headers": [(b"x-forwarded-for", b"6.6.6.6, 203.0.113.9")],  # spoofed, then real
+        "client": ("10.0.0.1", 1234),
+    }
+    assert client_key(Request(scope)) == "203.0.113.9"
+
+
+def test_limiter_forgets_idle_clients() -> None:
+    clock = FakeClock()
+    limiter = SlidingWindowLimiter(limit=5, window_s=60, clock=clock)
+    limiter.MAX_KEYS = 3
+    for ip in ["a", "b", "c"]:
+        limiter.check(ip)
+    clock.now += 61
+    limiter.check("d")  # table is full: idle a/b/c are pruned first
+    assert set(limiter._calls) == {"d"}

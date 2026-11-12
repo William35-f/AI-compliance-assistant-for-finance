@@ -37,10 +37,21 @@ class SlidingWindowLimiter:
         self._calls: dict[str, deque[float]] = {}
         self._lock = threading.Lock()
 
+    MAX_KEYS = 10_000  # forget idle clients beyond this, so memory can't grow forever
+
+    def _prune(self, now: float) -> None:
+        idle = [
+            k for k, calls in self._calls.items() if not calls or now - calls[-1] >= self.window_s
+        ]
+        for key in idle:
+            del self._calls[key]
+
     def check(self, key: str) -> float | None:
         """Record a call. Returns None if allowed, else seconds until the next free slot."""
         now = self._clock()
         with self._lock:
+            if len(self._calls) >= self.MAX_KEYS:
+                self._prune(now)
             calls = self._calls.setdefault(key, deque())
             while calls and now - calls[0] >= self.window_s:
                 calls.popleft()
@@ -51,11 +62,16 @@ class SlidingWindowLimiter:
 
 
 def client_key(request: Request) -> str:
-    """Client IP. Behind a hosting proxy (Render, Fly) the real IP is the first
-    X-Forwarded-For entry; locally it is the socket address."""
+    """Client IP for rate limiting.
+
+    Behind a hosting proxy (Render, Fly) the socket address is the proxy, and the
+    proxy APPENDS the real client IP to X-Forwarded-For. We take the LAST entry:
+    earlier entries are whatever the client sent, so trusting the first one would
+    let anyone dodge the limit by sending a fake header.
+    """
     forwarded = request.headers.get("x-forwarded-for")
     if forwarded:
-        return forwarded.split(",")[0].strip()
+        return forwarded.split(",")[-1].strip()
     return request.client.host if request.client else "unknown"
 
 

@@ -52,8 +52,18 @@ class ReportPage:
     text: str
 
 
-def load_pages(pdf_path: Path) -> list[ReportPage]:
+MAX_PAGES = 600  # the longest report in our corpus has 284 pages
+
+
+class ReportTooLarge(ValueError):
+    """The PDF has more pages than we are willing to parse."""
+
+
+def load_pages(pdf_path: Path, max_pages: int = MAX_PAGES) -> list[ReportPage]:
     with pymupdf.open(pdf_path) as doc:
+        # Check the page count first: a small file can still hold thousands of pages.
+        if doc.page_count > max_pages:
+            raise ReportTooLarge(f"PDF has {doc.page_count} pages; the limit is {max_pages}")
         return [ReportPage(i, page.get_text()) for i, page in enumerate(doc, start=1)]
 
 

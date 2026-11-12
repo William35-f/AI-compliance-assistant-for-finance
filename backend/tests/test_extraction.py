@@ -328,3 +328,10 @@ def test_risk_check_with_given_risks(client: TestClient, qa_index: None) -> None
     body = response.json()
     assert body["assessments"][0]["needs_human_review"] is True
     assert body["disclaimer"]
+
+
+def test_page_limit_is_enforced(report_pdf: Path) -> None:
+    from regulens.report_pages import ReportTooLarge
+
+    with pytest.raises(ReportTooLarge, match="4 pages"):
+        load_pages(report_pdf, max_pages=3)

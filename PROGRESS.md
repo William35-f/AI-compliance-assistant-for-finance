@@ -6,7 +6,7 @@
 - [x] **Phase 1: Ingestion pipeline** (2026-11-12)
 - [~] Phase 2: Q&A with citations (built and tested with a fake LLM; live Gemini check waits for the API key)
 - [~] Phase 3: Evaluation harness (built; 90 questions; retrieval baseline measured; LLM-judged baseline waits for the API key)
-- [ ] Phase 4: Retrieval experiments
+- [x] **Phase 4: Retrieval experiments** (retrieval metrics done; LLM-judged comparison waits for the key)
 - [ ] Phase 5: Report extraction and risk agent
 - [ ] Phase 6: Frontend, CI and deployment
 
@@ -183,6 +183,43 @@ Misses worth noting: all 5 questions on the 4-page cyber hygiene notice miss. Th
 packs six different controls together, and the questions use terms ("FSM-N06", "multi-factor
 authentication") that keyword search would match but the diluted embedding does not rank highly.
 This motivates the hybrid-search and heading-in-embedding experiments in Phase 4.
+
+---
+
+## Phase 4: Retrieval experiments
+
+**Built**
+- `retrieval.py`: three rankers (`vector`, `fts` = BM25 computed in SQL from the `tsvector`
+  index, `hybrid` = reciprocal rank fusion of both), an optional cross-encoder reranker
+  (`reranker.py`, fastembed), and every chunk carries its cosine similarity so the refusal
+  guardrail behaves the same in every mode.
+- Index variants in `index_configs.py` (`c300_o50`, `c800_o150`, `c600_o0`, `heading`), ingested
+  for regulations only (`ingest.py --doc-type regulation`).
+- `eval/questions_paraphrased.jsonl` (20 plain-language rewrites) and `eval/compare_runs.py`
+  (bootstrap 95% CI + paired wins/losses).
+
+**Results**: see the README "Experiments" section (all rows are in `eval/results/summary.md`).
+Chosen: `heading` index + `hybrid`, k = 5, no reranker. hit@5 0.800 to 0.950 (+12/-0),
+MRR 0.669 to 0.819; paraphrased set 0.600 to 0.800.
+
+**Decisions**
+
+| Decision | Why |
+|---|---|
+| BM25 written in SQL instead of `ts_rank` | `ts_rank` has no IDF, so frequent words ("bank", "should") count as much as rare, decisive ones ("SRTO"). |
+| Reciprocal rank fusion with k = 60 | Uses ranks only, so cosine and BM25 scores never need to be put on the same scale; 60 is the standard constant. No weight tuning, to avoid overfitting 80 questions. |
+| No reranker by default | Did not improve the chosen config and adds ~1.3 s per query on CPU. Still available (`RERANK=true`). |
+| Paraphrased question set | Questions written from the text favoured keyword search; the check changed the conclusion (BM25-only dropped from 0.912 to 0.600). |
+| Threshold 0.60 | Below the lowest in-scope similarity (0.656) with margin; catches clearly unrelated questions without an LLM call. |
+
+**Critique**
+- The eval set is small (80 + 20 questions): differences under ~5 points are within noise, so
+  decisions were made on paired wins/losses and confidence intervals, not single numbers.
+- The `heading` index holds regulations only (Q&A never searches annual reports). The
+  `baseline` index keeps all 15 documents.
+- Hybrid search runs the BM25 query over all chunks in scope (no precomputed statistics). At about
+  370 regulation chunks this takes about 30 ms; with 100k+ chunks the document-frequency
+  statistics should be precomputed into a table.
 
 ---
 

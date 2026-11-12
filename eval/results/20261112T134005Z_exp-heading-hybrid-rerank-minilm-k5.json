@@ -1,0 +1,4720 @@
+{
+  "run": "exp-heading-hybrid-rerank-minilm-k5",
+  "timestamp": "20261112T134005Z",
+  "complete": true,
+  "stopped_reason": null,
+  "config": {
+    "index": "heading",
+    "mode": "hybrid",
+    "k": 5,
+    "rerank": true,
+    "reranker_model": "Xenova/ms-marco-MiniLM-L-6-v2",
+    "candidates": 30,
+    "min_retrieval_score": 0.5,
+    "retrieval_only": true,
+    "answer_model": null,
+    "judge_model": null,
+    "embedding_model": "nomic-ai/nomic-embed-text-v1.5-Q",
+    "questions_file": "questions.jsonl"
+  },
+  "metrics": {
+    "questions": 90,
+    "in_scope": 80,
+    "out_of_scope": 10,
+    "retrieval_hit_rate": 0.9,
+    "mrr": 0.7479166666666667,
+    "answer_correctness": null,
+    "correctness_factual": null,
+    "correctness_multi_hop": null,
+    "citation_accuracy": null,
+    "unverified_quote_rate": null,
+    "oos_refusal_rate": 0.0,
+    "false_refusal_rate": null,
+    "latency_p50_ms": null,
+    "latency_p95_ms": null,
+    "avg_cost_usd": null
+  },
+  "duration_s": 94.2,
+  "results": [
+    {
+      "id": "cyb-01",
+      "category": "factual",
+      "question": "Under MAS Notice FSM-N06, for which accounts must a bank implement multi-factor authentication?",
+      "expected_answer": "For (a) all administrative accounts on any operating system, database, application, security appliance or network device that is a critical system, and (b) all accounts on any system the bank uses to access customer information through the internet.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7659122293263627,
+      "retrieved": [
+        {
+          "chunk_id": 8295,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 49,
+          "page_end": 49
+        },
+        {
+          "chunk_id": 8252,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 16,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8285,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 40,
+          "page_end": 41
+        },
+        {
+          "chunk_id": 8299,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 8280,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 36,
+          "page_end": 37
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "cyb-02",
+      "category": "factual",
+      "question": "What must a bank do under the cyber hygiene notice if no security patch is available for a vulnerability?",
+      "expected_answer": "It must ensure that controls are instituted to reduce any risk posed by that vulnerability to the system.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7870451234264491,
+      "retrieved": [
+        {
+          "chunk_id": 8327,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8325,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8258,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 18,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8028,
+          "source_id": "mas_trm_2021",
+          "page_start": 24,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8058,
+          "source_id": "mas_trm_2021",
+          "page_start": 49,
+          "page_end": 50
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "cyb-03",
+      "category": "factual",
+      "question": "When did MAS Notice FSM-N06 on Cyber Hygiene take effect?",
+      "expected_answer": "It took effect on 10 May 2024 (it was issued on 9 May 2024).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6892593615063604,
+      "retrieved": [
+        {
+          "chunk_id": 8252,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 16,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8268,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8285,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 40,
+          "page_end": 41
+        },
+        {
+          "chunk_id": 8295,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 49,
+          "page_end": 49
+        },
+        {
+          "chunk_id": 8304,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 56
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "cyb-04",
+      "category": "factual",
+      "question": "How does the MAS cyber hygiene notice define a critical system?",
+      "expected_answer": "A system whose failure will cause significant disruption to the bank's operations or materially impact its service to customers, such as a system that processes time-critical transactions or provides essential services to customers.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6641460295850726,
+      "retrieved": [
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8268,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8191,
+          "source_id": "mas_bcm_2022",
+          "page_start": 19,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8252,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 16,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8332,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 6,
+          "page_end": 7
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "cyb-05",
+      "category": "factual",
+      "question": "Within what timeframe must a bank apply security patches under MAS Notice FSM-N06?",
+      "expected_answer": "Within a timeframe that is commensurate with the risks posed by each vulnerability; no fixed number of days is set.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7709862612150737,
+      "retrieved": [
+        {
+          "chunk_id": 8295,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 49,
+          "page_end": 49
+        },
+        {
+          "chunk_id": 8252,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 16,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8083,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8306,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 57,
+          "page_end": 57
+        },
+        {
+          "chunk_id": 8299,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 52
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-01",
+      "category": "factual",
+      "question": "How quickly must a financial institution notify MAS of an incident that will severely disrupt business operations, according to the BCM Guidelines?",
+      "expected_answer": "As soon as possible, but not later than one hour upon discovery of the incident (also when the BCP is going to be activated in response to an incident).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8243797135978115,
+      "retrieved": [
+        {
+          "chunk_id": 8191,
+          "source_id": "mas_bcm_2022",
+          "page_start": 19,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8178,
+          "source_id": "mas_bcm_2022",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8210,
+          "source_id": "mas_iac_2020",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8083,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 15
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-02",
+      "category": "factual",
+      "question": "How often should an FI audit its overall business continuity management framework?",
+      "expected_answer": "At least once every three years, covering the overall BCM framework and the BCM of each critical business service.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7949074883971452,
+      "retrieved": [
+        {
+          "chunk_id": 8189,
+          "source_id": "mas_bcm_2022",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8192,
+          "source_id": "mas_bcm_2022",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8186,
+          "source_id": "mas_bcm_2022",
+          "page_start": 13,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8183,
+          "source_id": "mas_bcm_2022",
+          "page_start": 9,
+          "page_end": 10
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-03",
+      "category": "factual",
+      "question": "What is a Service Recovery Time Objective (SRTO) and what is it set for?",
+      "expected_answer": "A time-based metric giving the expected recovery timeline for a business service; the FI should establish an SRTO for each critical business service to guide resource prioritisation and recovery decisions.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8132774467308354,
+      "retrieved": [
+        {
+          "chunk_id": 8182,
+          "source_id": "mas_bcm_2022",
+          "page_start": 8,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8180,
+          "source_id": "mas_bcm_2022",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8034,
+          "source_id": "mas_trm_2021",
+          "page_start": 28,
+          "page_end": 29
+        },
+        {
+          "chunk_id": 8187,
+          "source_id": "mas_bcm_2022",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8035,
+          "source_id": "mas_trm_2021",
+          "page_start": 29,
+          "page_end": 30
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-04",
+      "category": "factual",
+      "question": "How often should an FI review its critical business services, their SRTOs/RTOs and dependencies?",
+      "expected_answer": "At least annually, or whenever there are material changes that affect them.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7707981608844667,
+      "retrieved": [
+        {
+          "chunk_id": 8186,
+          "source_id": "mas_bcm_2022",
+          "page_start": 13,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8182,
+          "source_id": "mas_bcm_2022",
+          "page_start": 8,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8183,
+          "source_id": "mas_bcm_2022",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8190,
+          "source_id": "mas_bcm_2022",
+          "page_start": 18,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-05",
+      "category": "factual",
+      "question": "What attestation should senior management give the Board on business continuity?",
+      "expected_answer": "An annual attestation to the Board on the state of the FI's BCM preparedness, the extent of its alignment with the Guidelines, and key issues needing the Board's attention such as significant residual risks.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7999435071047089,
+      "retrieved": [
+        {
+          "chunk_id": 8192,
+          "source_id": "mas_bcm_2022",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8067,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 2,
+          "page_end": 2
+        },
+        {
+          "chunk_id": 8187,
+          "source_id": "mas_bcm_2022",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8204,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 10
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-06",
+      "category": "factual",
+      "question": "Which earlier documents do the 2022 Business Continuity Management Guidelines supersede?",
+      "expected_answer": "The previous BCM Guidelines published in June 2003 and the January 2006 circular titled 'Further Guidance on BCM'.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.81983397044415,
+      "retrieved": [
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8179,
+          "source_id": "mas_bcm_2022",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8180,
+          "source_id": "mas_bcm_2022",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8178,
+          "source_id": "mas_bcm_2022",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8192,
+          "source_id": "mas_bcm_2022",
+          "page_start": 20,
+          "page_end": 21
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "bcm-07",
+      "category": "factual",
+      "question": "What should happen to gaps and weaknesses found during business continuity testing?",
+      "expected_answer": "They should be reported to senior management, and the FI should have a formal process to follow up remedial actions, whose effectiveness should be validated in subsequent tests.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7629663855326501,
+      "retrieved": [
+        {
+          "chunk_id": 8187,
+          "source_id": "mas_bcm_2022",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8186,
+          "source_id": "mas_bcm_2022",
+          "page_start": 13,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8183,
+          "source_id": "mas_bcm_2022",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-01",
+      "category": "factual",
+      "question": "How often should technology risk and cyber security awareness training be conducted, and for whom, under the TRM Guidelines?",
+      "expected_answer": "At least annually, for all staff, contractors and service providers who have access to the FI's information assets.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8237776342094905,
+      "retrieved": [
+        {
+          "chunk_id": 8006,
+          "source_id": "mas_trm_2021",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8053,
+          "source_id": "mas_trm_2021",
+          "page_start": 45,
+          "page_end": 46
+        },
+        {
+          "chunk_id": 8000,
+          "source_id": "mas_trm_2021",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8007,
+          "source_id": "mas_trm_2021",
+          "page_start": 12,
+          "page_end": 12
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-02",
+      "category": "factual",
+      "question": "How often should an FI conduct penetration testing on systems directly accessible from the Internet?",
+      "expected_answer": "At least once annually, or whenever these systems undergo major changes or updates.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7872192595718142,
+      "retrieved": [
+        {
+          "chunk_id": 8053,
+          "source_id": "mas_trm_2021",
+          "page_start": 45,
+          "page_end": 46
+        },
+        {
+          "chunk_id": 8045,
+          "source_id": "mas_trm_2021",
+          "page_start": 39,
+          "page_end": 40
+        },
+        {
+          "chunk_id": 8044,
+          "source_id": "mas_trm_2021",
+          "page_start": 38,
+          "page_end": 39
+        },
+        {
+          "chunk_id": 8050,
+          "source_id": "mas_trm_2021",
+          "page_start": 43,
+          "page_end": 44
+        },
+        {
+          "chunk_id": 8058,
+          "source_id": "mas_trm_2021",
+          "page_start": 49,
+          "page_end": 50
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-03",
+      "category": "factual",
+      "question": "How often should an FI review its disaster recovery plan under the Technology Risk Management Guidelines?",
+      "expected_answer": "At least annually, and it should be updated when there are material changes to business operations, information assets or environmental factors.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8486826660346598,
+      "retrieved": [
+        {
+          "chunk_id": 8034,
+          "source_id": "mas_trm_2021",
+          "page_start": 28,
+          "page_end": 29
+        },
+        {
+          "chunk_id": 8002,
+          "source_id": "mas_trm_2021",
+          "page_start": 9,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8186,
+          "source_id": "mas_bcm_2022",
+          "page_start": 13,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8037,
+          "source_id": "mas_trm_2021",
+          "page_start": 30,
+          "page_end": 32
+        },
+        {
+          "chunk_id": 8010,
+          "source_id": "mas_trm_2021",
+          "page_start": 13,
+          "page_end": 13
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-04",
+      "category": "factual",
+      "question": "What does the security-by-design approach mean in the TRM Guidelines?",
+      "expected_answer": "Building security into every phase of the system development life cycle (SDLC) to minimise system vulnerabilities and reduce the attack surface.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7487551791440246,
+      "retrieved": [
+        {
+          "chunk_id": 8015,
+          "source_id": "mas_trm_2021",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8021,
+          "source_id": "mas_trm_2021",
+          "page_start": 20,
+          "page_end": 20
+        },
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8065,
+          "source_id": "mas_trm_2021",
+          "page_start": 55,
+          "page_end": 55
+        },
+        {
+          "chunk_id": 8017,
+          "source_id": "mas_trm_2021",
+          "page_start": 17,
+          "page_end": 17
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-05",
+      "category": "factual",
+      "question": "What should happen to major issues and software defects found in source code review and application security testing before go-live?",
+      "expected_answer": "All issues and defects should be tracked, and major issues and software defects should be remediated before production deployment.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7347723900817819,
+      "retrieved": [
+        {
+          "chunk_id": 8020,
+          "source_id": "mas_trm_2021",
+          "page_start": 19,
+          "page_end": 20
+        },
+        {
+          "chunk_id": 8064,
+          "source_id": "mas_trm_2021",
+          "page_start": 54,
+          "page_end": 54
+        },
+        {
+          "chunk_id": 8358,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 26,
+          "page_end": 27
+        },
+        {
+          "chunk_id": 8027,
+          "source_id": "mas_trm_2021",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8021,
+          "source_id": "mas_trm_2021",
+          "page_start": 20,
+          "page_end": 20
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-06",
+      "category": "factual",
+      "question": "Where should an FI's disaster recovery data centre be located relative to its primary data centre?",
+      "expected_answer": "It should be geographically separated from the primary/production data centre, so that both sites are not impacted by a disruption to underlying infrastructure (e.g. telecommunications and power) in one location.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7302361802815045,
+      "retrieved": [
+        {
+          "chunk_id": 8037,
+          "source_id": "mas_trm_2021",
+          "page_start": 30,
+          "page_end": 32
+        },
+        {
+          "chunk_id": 8034,
+          "source_id": "mas_trm_2021",
+          "page_start": 28,
+          "page_end": 29
+        },
+        {
+          "chunk_id": 8035,
+          "source_id": "mas_trm_2021",
+          "page_start": 29,
+          "page_end": 30
+        },
+        {
+          "chunk_id": 8031,
+          "source_id": "mas_trm_2021",
+          "page_start": 25,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8036,
+          "source_id": "mas_trm_2021",
+          "page_start": 30,
+          "page_end": 30
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-07",
+      "category": "factual",
+      "question": "On what basis should access to privileged accounts be granted?",
+      "expected_answer": "Only on a need-to-use basis, because users with privileged access can severely damage the stability and security of the IT environment.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7617824598009655,
+      "retrieved": [
+        {
+          "chunk_id": 8040,
+          "source_id": "mas_trm_2021",
+          "page_start": 34,
+          "page_end": 35
+        },
+        {
+          "chunk_id": 8038,
+          "source_id": "mas_trm_2021",
+          "page_start": 33,
+          "page_end": 34
+        },
+        {
+          "chunk_id": 8039,
+          "source_id": "mas_trm_2021",
+          "page_start": 34,
+          "page_end": 34
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8037,
+          "source_id": "mas_trm_2021",
+          "page_start": 30,
+          "page_end": 32
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-08",
+      "category": "factual",
+      "question": "What controls do the TRM Guidelines expect for staff connecting remotely to an FI's internal network?",
+      "expected_answer": "Remote connections should be encrypted to prevent data leakage through sniffing and eavesdropping, and strong authentication such as multi-factor authentication should be implemented for users performing remote access.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7652380554151943,
+      "retrieved": [
+        {
+          "chunk_id": 8041,
+          "source_id": "mas_trm_2021",
+          "page_start": 35,
+          "page_end": 35
+        },
+        {
+          "chunk_id": 8045,
+          "source_id": "mas_trm_2021",
+          "page_start": 39,
+          "page_end": 40
+        },
+        {
+          "chunk_id": 8037,
+          "source_id": "mas_trm_2021",
+          "page_start": 30,
+          "page_end": 32
+        },
+        {
+          "chunk_id": 8048,
+          "source_id": "mas_trm_2021",
+          "page_start": 42,
+          "page_end": 42
+        },
+        {
+          "chunk_id": 8178,
+          "source_id": "mas_bcm_2022",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-09",
+      "category": "factual",
+      "question": "Should rooted or jailbroken mobile devices be allowed to use an FI's mobile app for financial transactions?",
+      "expected_answer": "No. They should be disallowed from performing financial transactions through the FI's mobile applications, unless the application is secured within a sandbox or container that protects it.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7213119867324717,
+      "retrieved": [
+        {
+          "chunk_id": 8065,
+          "source_id": "mas_trm_2021",
+          "page_start": 55,
+          "page_end": 55
+        },
+        {
+          "chunk_id": 8059,
+          "source_id": "mas_trm_2021",
+          "page_start": 50,
+          "page_end": 51
+        },
+        {
+          "chunk_id": 8062,
+          "source_id": "mas_trm_2021",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 8058,
+          "source_id": "mas_trm_2021",
+          "page_start": 49,
+          "page_end": 50
+        },
+        {
+          "chunk_id": 8041,
+          "source_id": "mas_trm_2021",
+          "page_start": 35,
+          "page_end": 35
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-10",
+      "category": "factual",
+      "question": "Why should an FI monitor end-of-support (EOS) dates of its hardware and software?",
+      "expected_answer": "Because service providers typically stop providing patches, including for security vulnerabilities found after the EOS date, which increases security and stability risks; the FI should also have a technology refresh plan.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7979106486585783,
+      "retrieved": [
+        {
+          "chunk_id": 8027,
+          "source_id": "mas_trm_2021",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8046,
+          "source_id": "mas_trm_2021",
+          "page_start": 40,
+          "page_end": 41
+        },
+        {
+          "chunk_id": 8024,
+          "source_id": "mas_trm_2021",
+          "page_start": 22,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8026,
+          "source_id": "mas_trm_2021",
+          "page_start": 23,
+          "page_end": 23
+        },
+        {
+          "chunk_id": 8359,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 27,
+          "page_end": 28
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-11",
+      "category": "factual",
+      "question": "What is an adversarial attack simulation exercise meant to test, and how should it be controlled?",
+      "expected_answer": "It tests and validates the effectiveness of the FI's cyber defence and response plan against prevalent cyber threats; objectives, scope and rules of engagement should be defined beforehand and it should be run under close supervision so the red team does not disrupt production systems.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7970078239992763,
+      "retrieved": [
+        {
+          "chunk_id": 8055,
+          "source_id": "mas_trm_2021",
+          "page_start": 47,
+          "page_end": 47
+        },
+        {
+          "chunk_id": 8057,
+          "source_id": "mas_trm_2021",
+          "page_start": 47,
+          "page_end": 48
+        },
+        {
+          "chunk_id": 8056,
+          "source_id": "mas_trm_2021",
+          "page_start": 47,
+          "page_end": 47
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8358,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 26,
+          "page_end": 27
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "trm-12",
+      "category": "factual",
+      "question": "What should an FI maintain to monitor and report technology risks, and who should significant risks be reported to?",
+      "expected_answer": "A risk register; significant risks should be monitored closely and reported to the board of directors and senior management, with frequency commensurate with the level of risk.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8261714041796596,
+      "retrieved": [
+        {
+          "chunk_id": 8011,
+          "source_id": "mas_trm_2021",
+          "page_start": 13,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8007,
+          "source_id": "mas_trm_2021",
+          "page_start": 12,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8002,
+          "source_id": "mas_trm_2021",
+          "page_start": 9,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8027,
+          "source_id": "mas_trm_2021",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8186,
+          "source_id": "mas_bcm_2022",
+          "page_start": 13,
+          "page_end": 14
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-01",
+      "category": "factual",
+      "question": "Within how many days does MAS expect a service provider to notify a bank of its engagement of a sub-contractor for a material ongoing outsourced relevant service?",
+      "expected_answer": "No later than 30 days; if notification comes after 30 days the bank should assess whether the service provider had good reasons and work with it to make future notifications more prompt.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.854117775951204,
+      "retrieved": [
+        {
+          "chunk_id": 8083,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8071,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8089,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 18,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8079,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 12,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8070,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-02",
+      "category": "factual",
+      "question": "What register should a bank maintain for its material ongoing outsourced relevant services, and who should be able to review it?",
+      "expected_answer": "A register of outsourcing arrangements, readily accessible for review by the board and senior management, updated promptly and forming part of their oversight and governance reviews.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8109199993293572,
+      "retrieved": [
+        {
+          "chunk_id": 8087,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8097,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 25,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8071,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8094,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 22,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8289,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-03",
+      "category": "factual",
+      "question": "What should a bank's outsourcing agreement specify about termination?",
+      "expected_answer": "It should specify the minimum period to execute a termination provision.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8528272007279804,
+      "retrieved": [
+        {
+          "chunk_id": 8077,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8078,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 11,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8088,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 18,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8080,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 12,
+          "page_end": 13
+        },
+        {
+          "chunk_id": 8079,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 12,
+          "page_end": 12
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-04",
+      "category": "factual",
+      "question": "What should a bank do when it becomes aware of an adverse development in an outsourcing arrangement, such as a prolonged service failure or a breach of customer information security?",
+      "expected_answer": "Notify MAS as soon as possible of the adverse development; it should also notify MAS of such adverse developments encountered within the bank's group.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8147727050711916,
+      "retrieved": [
+        {
+          "chunk_id": 8088,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 18,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8071,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8086,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8074,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 7,
+          "page_end": 8
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-05",
+      "category": "factual",
+      "question": "Name some aspects of a service provider that a bank should evaluate during outsourcing due diligence.",
+      "expected_answer": "Its experience and capability to support the arrangement, financial strength and resources, and others such as business continuity/disaster recovery arrangements and track record, reliance on and success with sub-contractors, insurance coverage, external environment of its jurisdiction, and ability and track record in complying with laws and regulations.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8863557343041448,
+      "retrieved": [
+        {
+          "chunk_id": 8075,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8076,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8094,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 22,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8077,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8092,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 20,
+          "page_end": 21
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-06",
+      "category": "factual",
+      "question": "Do the MAS outsourcing guidelines for banks apply to outsourcing to other entities in the bank's own group?",
+      "expected_answer": "Yes. They apply to outsourcing arrangements with parties within a bank's group, including subsidiaries of Singapore-incorporated banks; the expectations may be addressed in group-wide risk management policies and procedures.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8624457847224267,
+      "retrieved": [
+        {
+          "chunk_id": 8079,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 12,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8070,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8092,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8076,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8069,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-07",
+      "category": "factual",
+      "question": "What three service models are cloud services typically delivered as, according to the outsourcing guidelines?",
+      "expected_answer": "Software as a Service (SaaS), Platform as a Service (PaaS) and Infrastructure as a Service (IaaS).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8072592514793999,
+      "retrieved": [
+        {
+          "chunk_id": 8095,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8069,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8004,
+          "source_id": "mas_trm_2021",
+          "page_start": 10,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8089,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 18,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "out-08",
+      "category": "factual",
+      "question": "What additional measure may MAS impose if it is not satisfied with a bank's observance of the outsourcing guidelines?",
+      "expected_answer": "MAS may require additional measures to address deficiencies, which could include pre-notification of new material ongoing outsourced relevant services (MOORS); it may also take non-observance into account in assessing the bank.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8488769228122213,
+      "retrieved": [
+        {
+          "chunk_id": 8071,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8079,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 12,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8089,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 18,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8070,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-01",
+      "category": "factual",
+      "question": "When do MAS's Guidelines on Artificial Intelligence Risk Management take effect, and by when must the life cycle controls be met?",
+      "expected_answer": "They take effect on 7 October 2027; FIs may meet Sections 3-4 (oversight, key systems/policies) from 7 October 2027, and Sections 5-6 (AI life cycle controls and capability/capacity) by 7 October 2028.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7857503884993253,
+      "retrieved": [
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 7999,
+          "source_id": "mas_trm_2021",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8330,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8333,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-02",
+      "category": "factual",
+      "question": "Which risk dimensions must an FI's AI risk materiality assessment cover at a minimum?",
+      "expected_answer": "Impact (consequences of AI failure or poor performance on the FI and its customers), complexity (of the AI technology, its novelty, data or explainability), and reliance (degree of reliance and autonomy given to the AI, and level of human oversight).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8529053384275964,
+      "retrieved": [
+        {
+          "chunk_id": 8342,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8338,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 13,
+          "page_end": 13
+        },
+        {
+          "chunk_id": 8357,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 25,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8354,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8359,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 27,
+          "page_end": 28
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-03",
+      "category": "factual",
+      "question": "What must basic AI governance policies include at a minimum for FIs whose AI use is low impact?",
+      "expected_answer": "Clear accountability for AI oversight (e.g. a designated senior manager); permitted and prohibited uses of AI with effective human oversight; an approved list of AI tools and a process to approve new ones; staff education on AI policies; regular compliance checks; and periodic and trigger-based review of whether AI use still qualifies for the basic approach.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7782216641355565,
+      "retrieved": [
+        {
+          "chunk_id": 8333,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8334,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8345,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8340,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 14,
+          "page_end": 15
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-04",
+      "category": "factual",
+      "question": "What should an FI put in place for AI use cases assessed as high risk, in case the AI fails?",
+      "expected_answer": "Contingency plans with fallback options, such as alternative systems or manual processes, which are regularly reviewed and tested; for AI with kill switches, clear contingency activation protocols that are tested regularly.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8128285714745335,
+      "retrieved": [
+        {
+          "chunk_id": 8342,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8344,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8345,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8350,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8357,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 25,
+          "page_end": 26
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-05",
+      "category": "factual",
+      "question": "Does the AI risk management guidance require an FI to keep an inventory of AI, and who oversees it?",
+      "expected_answer": "Yes. The FI should establish and maintain an accurate inventory of AI use cases, systems or models with policies on how often it is updated; a designated control function sets the inventory policies and keeps independent oversight to ensure it stays accurate and complete.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8449950273673964,
+      "retrieved": [
+        {
+          "chunk_id": 8340,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8338,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 13,
+          "page_end": 13
+        },
+        {
+          "chunk_id": 8335,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 10,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8333,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-06",
+      "category": "factual",
+      "question": "Do the FEAT principles still apply now that MAS has issued AI risk management guidelines?",
+      "expected_answer": "Yes. The AI Risk Management Guidelines say the existing FEAT principles continue to apply for guiding the use of AI in the financial sector; the guidelines complement existing legislation and guidelines.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7846390986459977,
+      "retrieved": [
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 7999,
+          "source_id": "mas_trm_2021",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8098,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8330,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 4,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-07",
+      "category": "factual",
+      "question": "Who should designate the risk materiality of an AI use case, according to the AI risk management guidelines?",
+      "expected_answer": "A designated control function should establish the risk materiality assessment framework and arbitrate or approve the risk materiality of each AI use case, even if business units carry out parts of the assessment.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8809259105540869,
+      "retrieved": [
+        {
+          "chunk_id": 8342,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8343,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 16,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8333,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8354,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 23,
+          "page_end": 24
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "ai-08",
+      "category": "factual",
+      "question": "What responsibility does local senior management in Singapore keep when an FI adopts a group AI framework?",
+      "expected_answer": "Local senior management remains accountable for ensuring group frameworks adequately address local considerations and Singapore-specific regulatory requirements, with adequate visibility, input, timely reports and clear escalation paths for Singapore issues.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7756602823657326,
+      "retrieved": [
+        {
+          "chunk_id": 8335,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 10,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8337,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 11,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8192,
+          "source_id": "mas_bcm_2022",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8211,
+          "source_id": "mas_iac_2020",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8198,
+          "source_id": "mas_iac_2020",
+          "page_start": 6,
+          "page_end": 6
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "erm-01",
+      "category": "factual",
+      "question": "Which institutions do MAS's Guidelines on Environmental Risk Management for banks apply to?",
+      "expected_answer": "All banks, merchant banks and finance companies in Singapore, particularly for activities such as extending credit to corporate customers and underwriting capital market transactions; they apply on a group basis for locally-incorporated banks.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8217821596051416,
+      "retrieved": [
+        {
+          "chunk_id": 8216,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8223,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8217,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8070,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "erm-02",
+      "category": "factual",
+      "question": "Through which two channels can environmental risk financially impact banks?",
+      "expected_answer": "Physical risk and transition risk.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8250867904805067,
+      "retrieved": [
+        {
+          "chunk_id": 8218,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8219,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 5,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8217,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8223,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8226,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 10,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "erm-03",
+      "category": "factual",
+      "question": "How should a bank treat transactions with higher environmental risk under the ENRM Guidelines?",
+      "expected_answer": "They should be subject to enhanced due diligence (which may include site visits and separate review by environmental risk experts), escalated to an internal committee or appointed individual for approval where applicable, and decisions documented.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8100473416542763,
+      "retrieved": [
+        {
+          "chunk_id": 8223,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8224,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8222,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8225,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 10,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8229,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 11,
+          "page_end": 12
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "erm-04",
+      "category": "factual",
+      "question": "What four areas should a bank's climate-related disclosures cover according to the environmental risk guidelines?",
+      "expected_answer": "Governance, strategy, risk management, and metrics and targets (in line with the TCFD framework).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8828647918900684,
+      "retrieved": [
+        {
+          "chunk_id": 8229,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 11,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8223,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8224,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8222,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8226,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 10,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "erm-05",
+      "category": "factual",
+      "question": "How do the environmental risk guidelines assign responsibilities using the three lines of defence?",
+      "expected_answer": "Business line staff assess environmental risk before taking on new business and in ongoing relationships; the risk management function monitors and challenges implementation of policies; compliance ensures adherence to rules; and internal audit independently reviews the framework.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7246629589965842,
+      "retrieved": [
+        {
+          "chunk_id": 8222,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8217,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8337,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 11,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8220,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 6,
+          "page_end": 7
+        },
+        {
+          "chunk_id": 8223,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 8,
+          "page_end": 9
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "feat-01",
+      "category": "factual",
+      "question": "What does AIDA stand for in MAS's FEAT principles and how is it defined?",
+      "expected_answer": "Artificial intelligence or data analytics, defined as technologies that assist or replace human decision-making.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7803485928547718,
+      "retrieved": [
+        {
+          "chunk_id": 8098,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8100,
+          "source_id": "mas_feat_2018",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8099,
+          "source_id": "mas_feat_2018",
+          "page_start": 4,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8102,
+          "source_id": "mas_feat_2018",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8105,
+          "source_id": "mas_feat_2018",
+          "page_start": 7,
+          "page_end": 8
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "feat-02",
+      "category": "factual",
+      "question": "Under the FEAT principles, to what ethical standard should AIDA-driven decisions be held?",
+      "expected_answer": "At least the same ethical standards as human-driven decisions, and use of AIDA should align with the firm's ethical standards, values and codes of conduct.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8319204072318387,
+      "retrieved": [
+        {
+          "chunk_id": 8102,
+          "source_id": "mas_feat_2018",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8107,
+          "source_id": "mas_feat_2018",
+          "page_start": 9,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8098,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8108,
+          "source_id": "mas_feat_2018",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8101,
+          "source_id": "mas_feat_2018",
+          "page_start": 6,
+          "page_end": 6
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "feat-03",
+      "category": "factual",
+      "question": "What does the FEAT principle on external accountability require firms to give data subjects?",
+      "expected_answer": "Channels to enquire about, submit appeals for and request reviews of AIDA-driven decisions that affect them, with verified relevant supplementary data they provide taken into account in reviews.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8142380348590632,
+      "retrieved": [
+        {
+          "chunk_id": 8109,
+          "source_id": "mas_feat_2018",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8108,
+          "source_id": "mas_feat_2018",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8103,
+          "source_id": "mas_feat_2018",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8098,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8110,
+          "source_id": "mas_feat_2018",
+          "page_start": 12,
+          "page_end": 13
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "feat-04",
+      "category": "factual",
+      "question": "Does the FEAT principle on transparency require firms to publish their proprietary source code to explain AI decisions?",
+      "expected_answer": "No. Clear explanations do not require exposing intellectual property or publishing proprietary source code; firms balance transparency against risks of manipulation, considering the materiality of the decision.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8004081899037865,
+      "retrieved": [
+        {
+          "chunk_id": 8347,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 19,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8098,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8110,
+          "source_id": "mas_feat_2018",
+          "page_start": 12,
+          "page_end": 13
+        },
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8348,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 19,
+          "page_end": 19
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "feat-05",
+      "category": "factual",
+      "question": "According to the FEAT principles, when may AIDA-driven decisions systematically disadvantage individuals or groups?",
+      "expected_answer": "Only if the decisions can be justified; individuals or groups should not be systematically disadvantaged through AIDA-driven decisions unless justified, and use of personal attributes as inputs must be justified.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8154343808110476,
+      "retrieved": [
+        {
+          "chunk_id": 8101,
+          "source_id": "mas_feat_2018",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8105,
+          "source_id": "mas_feat_2018",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8098,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8108,
+          "source_id": "mas_feat_2018",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8100,
+          "source_id": "mas_feat_2018",
+          "page_start": 5,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "iac-01",
+      "category": "factual",
+      "question": "When were the Guidelines on Individual Accountability and Conduct issued and when did they take effect?",
+      "expected_answer": "Issued on 10 September 2020 and effective from 10 September 2021.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7785232512876467,
+      "retrieved": [
+        {
+          "chunk_id": 8070,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8210,
+          "source_id": "mas_iac_2020",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8195,
+          "source_id": "mas_iac_2020",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8204,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8196,
+          "source_id": "mas_iac_2020",
+          "page_start": 3,
+          "page_end": 3
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "iac-02",
+      "category": "factual",
+      "question": "Are FIs with fewer than 50 employees expected to adopt the specific guidance in the Individual Accountability and Conduct Guidelines?",
+      "expected_answer": "They should still achieve the five Outcomes, but are not ordinarily expected to adopt the specific guidance in the Guidelines.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8506303369268393,
+      "retrieved": [
+        {
+          "chunk_id": 8196,
+          "source_id": "mas_iac_2020",
+          "page_start": 3,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8195,
+          "source_id": "mas_iac_2020",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8209,
+          "source_id": "mas_iac_2020",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8178,
+          "source_id": "mas_bcm_2022",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8204,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 10
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "iac-03",
+      "category": "factual",
+      "question": "Who are 'material risk personnel' under the IAC Guidelines?",
+      "expected_answer": "Individuals with the authority to make decisions or conduct activities that can significantly impact the FI's safety and soundness, or cause harm to a significant segment of its customers or other stakeholders.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7748967633446754,
+      "retrieved": [
+        {
+          "chunk_id": 8198,
+          "source_id": "mas_iac_2020",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8205,
+          "source_id": "mas_iac_2020",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8195,
+          "source_id": "mas_iac_2020",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8211,
+          "source_id": "mas_iac_2020",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8333,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "iac-04",
+      "category": "factual",
+      "question": "To whom should senior managers generally report under the Individual Accountability and Conduct Guidelines?",
+      "expected_answer": "Apart from the CEO, who is directly accountable to the Board or Head Office, senior managers should generally have direct reporting lines to the CEO (or equivalent) and, where relevant, to the Board or Head Office.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.811643634802521,
+      "retrieved": [
+        {
+          "chunk_id": 8204,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8195,
+          "source_id": "mas_iac_2020",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8201,
+          "source_id": "mas_iac_2020",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8200,
+          "source_id": "mas_iac_2020",
+          "page_start": 7,
+          "page_end": 7
+        },
+        {
+          "chunk_id": 8211,
+          "source_id": "mas_iac_2020",
+          "page_start": 17,
+          "page_end": 18
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "iac-05",
+      "category": "factual",
+      "question": "Does MAS require regular submissions on the roles and responsibilities of senior managers under the IAC Guidelines?",
+      "expected_answer": "No. MAS will not typically require regular submissions; FIs must keep accurate and comprehensive records, and MAS may engage FIs on their processes as part of ongoing supervision.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7579563198243464,
+      "retrieved": [
+        {
+          "chunk_id": 8202,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8209,
+          "source_id": "mas_iac_2020",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8196,
+          "source_id": "mas_iac_2020",
+          "page_start": 3,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8195,
+          "source_id": "mas_iac_2020",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8204,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 10
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "iac-06",
+      "category": "factual",
+      "question": "What does Outcome 4 of the Individual Accountability and Conduct Guidelines say about material risk personnel?",
+      "expected_answer": "Material risk personnel are fit and proper for their roles, and subject to effective risk governance, appropriate incentive structures and standards of conduct.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7908675082393013,
+      "retrieved": [
+        {
+          "chunk_id": 8205,
+          "source_id": "mas_iac_2020",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8195,
+          "source_id": "mas_iac_2020",
+          "page_start": 2,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8198,
+          "source_id": "mas_iac_2020",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8210,
+          "source_id": "mas_iac_2020",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8207,
+          "source_id": "mas_iac_2020",
+          "page_start": 12,
+          "page_end": 13
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "fd-01",
+      "category": "factual",
+      "question": "What are the five fair dealing outcomes in MAS's Guidelines on Fair Dealing?",
+      "expected_answer": "1) Customers have confidence that fair dealing is central to the FI's corporate culture; 2) FIs offer products and services suitable for their target customer segments; 3) customers are served by competent representatives; 4) customers receive clear, relevant and timely information accurately representing products and services; 5) FIs handle complaints in an independent, effective and prompt manner.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.787453321795135,
+      "retrieved": [
+        {
+          "chunk_id": 8117,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 3,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8113,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 2,
+          "page_end": 2
+        },
+        {
+          "chunk_id": 8209,
+          "source_id": "mas_iac_2020",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8120,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8126,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "fd-02",
+      "category": "factual",
+      "question": "When were the Guidelines on Fair Dealing first issued and when were they last revised?",
+      "expected_answer": "First issued on 3 April 2009 and last revised on 30 May 2024 (guideline number FSG-G04).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7444879350749828,
+      "retrieved": [
+        {
+          "chunk_id": 8122,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8117,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 3,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8175,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 39,
+          "page_end": 39
+        },
+        {
+          "chunk_id": 8113,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 2,
+          "page_end": 2
+        },
+        {
+          "chunk_id": 8127,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "fd-03",
+      "category": "factual",
+      "question": "How does the Fair Dealing guideline define a 'customer' and a 'representative'?",
+      "expected_answer": "A customer is a user or prospective user of financial products and/or services; a representative is any staff, employee or agent engaged by a financial institution.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8416246623860807,
+      "retrieved": [
+        {
+          "chunk_id": 8127,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8118,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8151,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 25,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8121,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 7,
+          "page_end": 7
+        },
+        {
+          "chunk_id": 8173,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 38,
+          "page_end": 38
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "fd-04",
+      "category": "factual",
+      "question": "What should the Board and Senior Management do to build a fair dealing culture?",
+      "expected_answer": "Lead the organisation to establish a culture that promotes fair dealing, including devising a clear strategy to achieve the fair dealing outcomes, aligning policies and practices to those outcomes, and communicating to internal and external stakeholders that fair dealing is a priority.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8381668961728446,
+      "retrieved": [
+        {
+          "chunk_id": 8127,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8119,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8120,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8122,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8126,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "fd-05",
+      "category": "factual",
+      "question": "Do the Fair Dealing Guidelines apply only to retail customers?",
+      "expected_answer": "No. They apply across all financial products and services; although written primarily from a retail customer lens, MAS expects FIs to apply the principles to all customers, proportionately to their business, giving particular consideration to vulnerable customers.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8219580404069935,
+      "retrieved": [
+        {
+          "chunk_id": 8117,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 3,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8173,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 38,
+          "page_end": 38
+        },
+        {
+          "chunk_id": 8121,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 7,
+          "page_end": 7
+        },
+        {
+          "chunk_id": 8122,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 7,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8126,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "fd-06",
+      "category": "factual",
+      "question": "Which fair dealing outcome deals with customer complaints and what does it require?",
+      "expected_answer": "Outcome 5: financial institutions handle customer complaints in an independent, effective and prompt manner.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8173965794638496,
+      "retrieved": [
+        {
+          "chunk_id": 8126,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8117,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 3,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8173,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 38,
+          "page_end": 38
+        },
+        {
+          "chunk_id": 8129,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 12,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8123,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 8,
+          "page_end": 9
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-01",
+      "category": "factual",
+      "question": "How often should a bank review its enterprise-wide money laundering and terrorism financing risk assessment?",
+      "expected_answer": "At least once every two years, or when material trigger events occur, whichever is earlier.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8693566151044527,
+      "retrieved": [
+        {
+          "chunk_id": 8250,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8247,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 12,
+          "page_end": 13
+        },
+        {
+          "chunk_id": 8249,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8246,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 12,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8244,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 10,
+          "page_end": 11
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-02",
+      "category": "factual",
+      "question": "If a bank establishes business relations before completing customer identity verification, how long can verification take?",
+      "expected_answer": "Verification should be completed within 30 business days after business relations are established; if still incomplete after 30 business days, the bank should suspend business relations and stop further transactions (except returning funds to their sources where possible).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7178303073477668,
+      "retrieved": [
+        {
+          "chunk_id": 8271,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 28,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 8269,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 27
+        },
+        {
+          "chunk_id": 8256,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8270,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 27,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 8289,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-03",
+      "category": "factual",
+      "question": "What must a bank do when name screening produces a positive hit against a sanctions list?",
+      "expected_answer": "Freeze the funds or other assets of the designated persons/entities without delay and without prior notice, report the assets promptly to the relevant authorities, and file a Suspicious Transaction Report as soon as possible and no later than 1 business day after suspicion was first established.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8040140129377686,
+      "retrieved": [
+        {
+          "chunk_id": 8273,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 29,
+          "page_end": 30
+        },
+        {
+          "chunk_id": 8305,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 57
+        },
+        {
+          "chunk_id": 8274,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 30,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 8275,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 31,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 8292,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 47,
+          "page_end": 48
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-04",
+      "category": "factual",
+      "question": "Who holds ultimate responsibility for a bank's compliance with AML/CFT laws and notices?",
+      "expected_answer": "The bank's board of directors and senior management.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8126121595337523,
+      "retrieved": [
+        {
+          "chunk_id": 8234,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8300,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 53
+        },
+        {
+          "chunk_id": 8235,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 5,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8298,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 8303,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 54,
+          "page_end": 55
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-05",
+      "category": "factual",
+      "question": "Who forms the first line of defence for money laundering risk in a bank, according to the Guidelines to Notice 626?",
+      "expected_answer": "Business units such as front office and customer-facing functions, which are in charge of identifying, assessing and controlling the ML/TF risks of their business; the second line includes the AML/CFT compliance function and support functions.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8167424180670932,
+      "retrieved": [
+        {
+          "chunk_id": 8230,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 8234,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8285,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 40,
+          "page_end": 41
+        },
+        {
+          "chunk_id": 8303,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 54,
+          "page_end": 55
+        },
+        {
+          "chunk_id": 8235,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 5,
+          "page_end": 6
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-06",
+      "category": "factual",
+      "question": "Which individuals should at least be treated as domestic politically exposed persons in Singapore?",
+      "expected_answer": "At least all Government Ministers, Members of Parliament, Nominated Members of Parliament and Non-Constituency Members of Parliament.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7063130957523801,
+      "retrieved": [
+        {
+          "chunk_id": 8279,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 36,
+          "page_end": 36
+        },
+        {
+          "chunk_id": 8274,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 30,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 8091,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 20,
+          "page_end": 20
+        },
+        {
+          "chunk_id": 8206,
+          "source_id": "mas_iac_2020",
+          "page_start": 11,
+          "page_end": 12
+        },
+        {
+          "chunk_id": 8277,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 34,
+          "page_end": 35
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-07",
+      "category": "factual",
+      "question": "What does 'source of wealth' mean in the AML guidelines for banks?",
+      "expected_answer": "The origin of the customer's and beneficial owner's entire body of wealth (total assets), including seed money that generated later wealth and any gifts or other assets received.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8067812301576199,
+      "retrieved": [
+        {
+          "chunk_id": 8281,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 37,
+          "page_end": 38
+        },
+        {
+          "chunk_id": 8282,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 38,
+          "page_end": 39
+        },
+        {
+          "chunk_id": 8283,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 39,
+          "page_end": 40
+        },
+        {
+          "chunk_id": 8285,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 40,
+          "page_end": 41
+        },
+        {
+          "chunk_id": 8265,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 23,
+          "page_end": 24
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-08",
+      "category": "factual",
+      "question": "How often should higher-risk customers' CDD information be reviewed?",
+      "expected_answer": "Higher-risk customers should be reviewed more frequently, for example on an annual basis, so that CDD information such as nationality, passport details and ownership and control information remains relevant and up to date.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7217664128138348,
+      "retrieved": [
+        {
+          "chunk_id": 8265,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 8250,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8266,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8289,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        },
+        {
+          "chunk_id": 8274,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 30,
+          "page_end": 31
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-09",
+      "category": "factual",
+      "question": "When may a bank accept a P.O. box address as a customer's address under the AML guidelines?",
+      "expected_answer": "Only for jurisdictions where a residential address (e.g. street name or house number) is not applicable or available in the local context.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7908581749380732,
+      "retrieved": [
+        {
+          "chunk_id": 8257,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 18,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8277,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 34,
+          "page_end": 35
+        },
+        {
+          "chunk_id": 8280,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 36,
+          "page_end": 37
+        },
+        {
+          "chunk_id": 8297,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 50,
+          "page_end": 51
+        },
+        {
+          "chunk_id": 8300,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 53
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "aml-10",
+      "category": "factual",
+      "question": "How should a bank document and check the parameters and thresholds it uses to detect suspicious transactions?",
+      "expected_answer": "They should be properly documented and independently validated to ensure they are appropriate to the bank's operations and context.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8153179442484766,
+      "retrieved": [
+        {
+          "chunk_id": 8267,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 25,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8254,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 16,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8061,
+          "source_id": "mas_trm_2021",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 8312,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 62,
+          "page_end": 62
+        },
+        {
+          "chunk_id": 8297,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 50,
+          "page_end": 51
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-01",
+      "category": "multi-hop",
+      "question": "How quickly must an FI notify MAS of an incident that severely disrupts business operations, and how quickly should an outsourcing service provider tell a bank that it has engaged a sub-contractor?",
+      "expected_answer": "MAS should be notified as soon as possible and no later than one hour after discovering the incident (BCM Guidelines); the service provider's notification of a sub-contractor engagement should come no later than 30 days (Outsourcing Guidelines for banks).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8175030911411851,
+      "retrieved": [
+        {
+          "chunk_id": 8191,
+          "source_id": "mas_bcm_2022",
+          "page_start": 19,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8083,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8031,
+          "source_id": "mas_trm_2021",
+          "page_start": 25,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8071,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-02",
+      "category": "multi-hop",
+      "question": "How often should internet-facing systems be penetration tested, compared with how often the overall BCM framework should be audited?",
+      "expected_answer": "Penetration testing of internet-facing systems at least once annually or after major changes (TRM Guidelines); the BCM framework audit at least once every three years (BCM Guidelines).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7367200434486127,
+      "retrieved": [
+        {
+          "chunk_id": 8189,
+          "source_id": "mas_bcm_2022",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8053,
+          "source_id": "mas_trm_2021",
+          "page_start": 45,
+          "page_end": 46
+        },
+        {
+          "chunk_id": 8187,
+          "source_id": "mas_bcm_2022",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8186,
+          "source_id": "mas_bcm_2022",
+          "page_start": 13,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-03",
+      "category": "multi-hop",
+      "question": "Where do MAS's technology risk guidelines and the cyber hygiene notice each require or expect multi-factor authentication?",
+      "expected_answer": "The TRM Guidelines expect strong authentication such as MFA for users performing remote access; Notice FSM-N06 requires MFA for all administrative accounts on critical systems and for all accounts on systems used to access customer information through the internet.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7856261990238322,
+      "retrieved": [
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 7999,
+          "source_id": "mas_trm_2021",
+          "page_start": 6,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 8059,
+          "source_id": "mas_trm_2021",
+          "page_start": 50,
+          "page_end": 51
+        },
+        {
+          "chunk_id": 8268,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8327,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-04",
+      "category": "multi-hop",
+      "question": "What do the TRM Guidelines and the BCM Guidelines each say about recovery time objectives?",
+      "expected_answer": "TRM: the FI should establish system recovery time objectives (RTO) and recovery point objectives (RPO) aligned to its business resumption and system recovery priorities. BCM: the FI should set a Service Recovery Time Objective (SRTO) for each critical business service, and the RTOs of underlying business functions and dependencies must meet the SRTOs.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7433833522672897,
+      "retrieved": [
+        {
+          "chunk_id": 8182,
+          "source_id": "mas_bcm_2022",
+          "page_start": 8,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 8085,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 8180,
+          "source_id": "mas_bcm_2022",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8187,
+          "source_id": "mas_bcm_2022",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-05",
+      "category": "multi-hop",
+      "question": "How do the 2018 FEAT principles and the 2026 AI Risk Management Guidelines assign accountability for AI use?",
+      "expected_answer": "FEAT requires clear responsibility and ownership of AIDA-driven decisions with appropriate internal approving authorities, for both internally developed and externally sourced AIDA. The AI Risk Management Guidelines make the board (or a delegated committee) responsible for approving and regularly reviewing the AI risk governance approach, and senior management responsible for implementing the frameworks; FEAT continues to apply alongside them.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7931201759814757,
+      "retrieved": [
+        {
+          "chunk_id": 8329,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8350,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8330,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8335,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 10,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8333,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 8,
+          "page_end": 9
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-06",
+      "category": "multi-hop",
+      "question": "What is the deadline for filing a suspicious transaction report after a sanctions-screening hit, and what is the deadline for notifying MAS of a severe operational disruption?",
+      "expected_answer": "The STR should be filed as soon as possible and no later than 1 business day after suspicion is first established (Guidelines to Notice 626); MAS should be notified of a severe disruption as soon as possible and no later than one hour after discovery (BCM Guidelines).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7451965601501118,
+      "retrieved": [
+        {
+          "chunk_id": 8273,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 29,
+          "page_end": 30
+        },
+        {
+          "chunk_id": 8306,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 57,
+          "page_end": 57
+        },
+        {
+          "chunk_id": 8191,
+          "source_id": "mas_bcm_2022",
+          "page_start": 19,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 8274,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 30,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 8083,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 15
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.3333333333333333,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-07",
+      "category": "multi-hop",
+      "question": "Who is the first line of defence for environmental risk and for money laundering risk in a bank?",
+      "expected_answer": "In both, the business lines: under the environmental risk guidelines, business line staff assess environmental risk before taking on new business and during relationships; under the AML guidelines, business units (front office, customer-facing functions) identify, assess and control ML/TF risks.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7423905106879289,
+      "retrieved": [
+        {
+          "chunk_id": 8234,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8223,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 8,
+          "page_end": 9
+        },
+        {
+          "chunk_id": 8217,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8218,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8222,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 7,
+          "page_end": 8
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "mh-08",
+      "category": "multi-hop",
+      "question": "What do the BCM Guidelines and the IAC Guidelines each expect from senior management in reporting to or being accountable to the Board?",
+      "expected_answer": "BCM: senior management should give the Board an annual attestation on BCM preparedness, alignment with the Guidelines and key issues such as significant residual risks. IAC: senior managers generally report directly to the CEO, who is directly accountable to the Board, and FIs need clear management structures and reporting lines.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7679105706355669,
+      "retrieved": [
+        {
+          "chunk_id": 8192,
+          "source_id": "mas_bcm_2022",
+          "page_start": 20,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8204,
+          "source_id": "mas_iac_2020",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 8209,
+          "source_id": "mas_iac_2020",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 8193,
+          "source_id": "mas_bcm_2022",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8178,
+          "source_id": "mas_bcm_2022",
+          "page_start": 3,
+          "page_end": 4
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-01",
+      "category": "out_of_scope",
+      "question": "What is the current SORA overnight interest rate?",
+      "expected_answer": "REFUSE: not covered by the MAS guideline documents.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6266766878578236,
+      "retrieved": [
+        {
+          "chunk_id": 8172,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 36,
+          "page_end": 37
+        },
+        {
+          "chunk_id": 8163,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 32,
+          "page_end": 32
+        },
+        {
+          "chunk_id": 8156,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 28,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 8161,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 31,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 8143,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 21,
+          "page_end": 21
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-02",
+      "category": "out_of_scope",
+      "question": "What are the licensing requirements for a digital token service provider under the FSM Act?",
+      "expected_answer": "REFUSE: not covered by the MAS guideline documents in the corpus.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6696546415666318,
+      "retrieved": [
+        {
+          "chunk_id": 8268,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 8234,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8233,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8299,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 8304,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 56
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-03",
+      "category": "out_of_scope",
+      "question": "What is the maximum loan-to-value limit for a second housing loan in Singapore?",
+      "expected_answer": "REFUSE: not covered by the MAS guideline documents.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6365504788038904,
+      "retrieved": [
+        {
+          "chunk_id": 8197,
+          "source_id": "mas_iac_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8214,
+          "source_id": "mas_iac_2020",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8277,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 34,
+          "page_end": 35
+        },
+        {
+          "chunk_id": 8080,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 12,
+          "page_end": 13
+        },
+        {
+          "chunk_id": 8215,
+          "source_id": "mas_iac_2020",
+          "page_start": 22,
+          "page_end": 23
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-04",
+      "category": "out_of_scope",
+      "question": "How do I apply for a Singapore Employment Pass?",
+      "expected_answer": "REFUSE: unrelated to the MAS guideline documents.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7022691980979346,
+      "retrieved": [
+        {
+          "chunk_id": 8269,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 27
+        },
+        {
+          "chunk_id": 8302,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 54,
+          "page_end": 54
+        },
+        {
+          "chunk_id": 8323,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 1,
+          "page_end": 1
+        },
+        {
+          "chunk_id": 8197,
+          "source_id": "mas_iac_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8211,
+          "source_id": "mas_iac_2020",
+          "page_start": 17,
+          "page_end": 18
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-05",
+      "category": "out_of_scope",
+      "question": "What minimum Common Equity Tier 1 capital adequacy ratio must Singapore banks hold under MAS Notice 637?",
+      "expected_answer": "REFUSE: Notice 637 is not in the corpus.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7117097100340815,
+      "retrieved": [
+        {
+          "chunk_id": 8277,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 34,
+          "page_end": 35
+        },
+        {
+          "chunk_id": 8299,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 8197,
+          "source_id": "mas_iac_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8323,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 1,
+          "page_end": 1
+        },
+        {
+          "chunk_id": 8304,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 56
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-06",
+      "category": "out_of_scope",
+      "question": "Who won the 2022 FIFA World Cup?",
+      "expected_answer": "REFUSE: unrelated.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.5059385089907871,
+      "retrieved": [
+        {
+          "chunk_id": 8233,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 8323,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 1,
+          "page_end": 1
+        },
+        {
+          "chunk_id": 8304,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 56
+        },
+        {
+          "chunk_id": 8330,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8057,
+          "source_id": "mas_trm_2021",
+          "page_start": 47,
+          "page_end": 48
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-07",
+      "category": "out_of_scope",
+      "question": "What was DBS Group's net profit for 2025?",
+      "expected_answer": "REFUSE: the Q&A answers from MAS guidelines only; company figures belong to the extraction feature.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.544245926185476,
+      "retrieved": [
+        {
+          "chunk_id": 8211,
+          "source_id": "mas_iac_2020",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 8218,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8111,
+          "source_id": "mas_feat_2018",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 8313,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 62,
+          "page_end": 63
+        },
+        {
+          "chunk_id": 8303,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 54,
+          "page_end": 55
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-08",
+      "category": "out_of_scope",
+      "question": "How much deposit insurance coverage does SDIC provide per depositor?",
+      "expected_answer": "REFUSE: not covered by the MAS guideline documents.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.5735128689857767,
+      "retrieved": [
+        {
+          "chunk_id": 8194,
+          "source_id": "mas_bcm_2022",
+          "page_start": 23,
+          "page_end": 23
+        },
+        {
+          "chunk_id": 8143,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 21,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 8157,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 28,
+          "page_end": 29
+        },
+        {
+          "chunk_id": 8197,
+          "source_id": "mas_iac_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 8314,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 63,
+          "page_end": 64
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-09",
+      "category": "out_of_scope",
+      "question": "Write a Python function that sorts a list of numbers.",
+      "expected_answer": "REFUSE: unrelated.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.569553469130726,
+      "retrieved": [
+        {
+          "chunk_id": 8262,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8336,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8181,
+          "source_id": "mas_bcm_2022",
+          "page_start": 6,
+          "page_end": 7
+        },
+        {
+          "chunk_id": 8274,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 30,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 8234,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "oos-10",
+      "category": "out_of_scope",
+      "question": "What obligations does the EU AI Act impose on providers of high-risk AI systems?",
+      "expected_answer": "REFUSE: the EU AI Act is not in the corpus.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7295056548449328,
+      "retrieved": [
+        {
+          "chunk_id": 8352,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 8355,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 8336,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 8359,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 27,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 8339,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 13,
+          "page_end": 14
+        }
+      ],
+      "retrieval_hit": null,
+      "reciprocal_rank": null,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    }
+  ]
+}

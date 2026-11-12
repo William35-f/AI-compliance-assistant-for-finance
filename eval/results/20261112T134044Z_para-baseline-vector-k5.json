@@ -1,0 +1,1080 @@
+{
+  "run": "para-baseline-vector-k5",
+  "timestamp": "20261112T134044Z",
+  "complete": true,
+  "stopped_reason": null,
+  "config": {
+    "index": "baseline",
+    "mode": "vector",
+    "k": 5,
+    "rerank": false,
+    "reranker_model": null,
+    "candidates": 30,
+    "min_retrieval_score": 0.5,
+    "retrieval_only": true,
+    "answer_model": null,
+    "judge_model": null,
+    "embedding_model": "nomic-ai/nomic-embed-text-v1.5-Q",
+    "questions_file": "questions_paraphrased.jsonl"
+  },
+  "metrics": {
+    "questions": 20,
+    "in_scope": 20,
+    "out_of_scope": 0,
+    "retrieval_hit_rate": 0.6,
+    "mrr": 0.44749999999999995,
+    "answer_correctness": null,
+    "correctness_factual": null,
+    "correctness_multi_hop": null,
+    "citation_accuracy": null,
+    "unverified_quote_rate": null,
+    "oos_refusal_rate": null,
+    "false_refusal_rate": null,
+    "latency_p50_ms": null,
+    "latency_p95_ms": null,
+    "avg_cost_usd": null
+  },
+  "duration_s": 0.4,
+  "results": [
+    {
+      "id": "p-01",
+      "category": "factual",
+      "question": "Which logins at a Singapore bank need more than just a password under MAS's cyber hygiene rules?",
+      "expected_answer": "MFA is required for all administrative accounts on critical systems, and for all accounts on systems used to access customer information through the internet.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7250290889708959,
+      "retrieved": [
+        {
+          "chunk_id": 4488,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 27
+        },
+        {
+          "chunk_id": 4492,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 29,
+          "page_end": 30
+        },
+        {
+          "chunk_id": 4543,
+          "source_id": "mas_cyber_hygiene_fsm_n06",
+          "page_start": 1,
+          "page_end": 2
+        },
+        {
+          "chunk_id": 4433,
+          "source_id": "mas_iac_2020",
+          "page_start": 21,
+          "page_end": 22
+        },
+        {
+          "chunk_id": 4506,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 42,
+          "page_end": 42
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-02",
+      "category": "factual",
+      "question": "If a bank's operations go badly down, how long does it have before it must tell the regulator?",
+      "expected_answer": "As soon as possible and no later than one hour after discovering the incident.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7259234833564476,
+      "retrieved": [
+        {
+          "chunk_id": 4469,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 4525,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 57,
+          "page_end": 57
+        },
+        {
+          "chunk_id": 4290,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4516,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 50,
+          "page_end": 51
+        },
+        {
+          "chunk_id": 4508,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-03",
+      "category": "factual",
+      "question": "How often must a firm's business continuity set-up be independently checked by auditors?",
+      "expected_answer": "At least once every three years.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.706591840398785,
+      "retrieved": [
+        {
+          "chunk_id": 4304,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 16,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 4312,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 21,
+          "page_end": 21
+        },
+        {
+          "chunk_id": 4508,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        },
+        {
+          "chunk_id": 4469,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 4484,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 23,
+          "page_end": 24
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-04",
+      "category": "factual",
+      "question": "How regularly should employees and contractors get cyber awareness lessons?",
+      "expected_answer": "At least annually, for all staff, contractors and service providers with access to information assets.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7683476654582602,
+      "retrieved": [
+        {
+          "chunk_id": 4225,
+          "source_id": "mas_trm_2021",
+          "page_start": 11,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 4273,
+          "source_id": "mas_trm_2021",
+          "page_start": 46,
+          "page_end": 46
+        },
+        {
+          "chunk_id": 4281,
+          "source_id": "mas_trm_2021",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 4268,
+          "source_id": "mas_trm_2021",
+          "page_start": 43,
+          "page_end": 43
+        },
+        {
+          "chunk_id": 4522,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 54,
+          "page_end": 55
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-05",
+      "category": "factual",
+      "question": "How often should a bank have ethical hackers attack the systems it exposes to the internet?",
+      "expected_answer": "Penetration testing at least once annually or whenever the systems undergo major changes.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7392742973012344,
+      "retrieved": [
+        {
+          "chunk_id": 4469,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 4281,
+          "source_id": "mas_trm_2021",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 4502,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 39,
+          "page_end": 40
+        },
+        {
+          "chunk_id": 4486,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 25,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 4277,
+          "source_id": "mas_trm_2021",
+          "page_start": 49,
+          "page_end": 50
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-06",
+      "category": "factual",
+      "question": "Can a bank put its backup data centre in the same place as its main one?",
+      "expected_answer": "No; the DR data centre should be geographically separated so both are not hit by the same infrastructure disruption.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6904968613989462,
+      "retrieved": [
+        {
+          "chunk_id": 4255,
+          "source_id": "mas_trm_2021",
+          "page_start": 30,
+          "page_end": 30
+        },
+        {
+          "chunk_id": 4303,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 4315,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 24,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 4458,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 8,
+          "page_end": 8
+        },
+        {
+          "chunk_id": 4306,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 17,
+          "page_end": 18
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-07",
+      "category": "factual",
+      "question": "Can customers with hacked or modified phones still use the bank app to send money?",
+      "expected_answer": "Rooted/jailbroken devices should be disallowed from performing financial transactions unless the app is secured in a sandbox or container.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.6827313987217276,
+      "retrieved": [
+        {
+          "chunk_id": 4281,
+          "source_id": "mas_trm_2021",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 4277,
+          "source_id": "mas_trm_2021",
+          "page_start": 49,
+          "page_end": 50
+        },
+        {
+          "chunk_id": 4488,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 26,
+          "page_end": 27
+        },
+        {
+          "chunk_id": 4280,
+          "source_id": "mas_trm_2021",
+          "page_start": 52,
+          "page_end": 52
+        },
+        {
+          "chunk_id": 4278,
+          "source_id": "mas_trm_2021",
+          "page_start": 50,
+          "page_end": 51
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-08",
+      "category": "factual",
+      "question": "How long can a vendor wait before telling the bank it has brought in another company to do part of the work?",
+      "expected_answer": "No later than 30 days.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7108497484537888,
+      "retrieved": [
+        {
+          "chunk_id": 4490,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 28,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 4302,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 4303,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 4508,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        },
+        {
+          "chunk_id": 4290,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-09",
+      "category": "factual",
+      "question": "What list of vendor deals should a bank keep so its directors can look at it?",
+      "expected_answer": "A register of outsourcing arrangements, readily accessible to the board and senior management and updated promptly.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7386382027677574,
+      "retrieved": [
+        {
+          "chunk_id": 4505,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 41,
+          "page_end": 42
+        },
+        {
+          "chunk_id": 4531,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 62,
+          "page_end": 62
+        },
+        {
+          "chunk_id": 4485,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 4364,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 22,
+          "page_end": 23
+        },
+        {
+          "chunk_id": 4363,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 21,
+          "page_end": 22
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-10",
+      "category": "factual",
+      "question": "From what date do financial firms have to start following MAS's rules for using artificial intelligence?",
+      "expected_answer": "From 7 October 2027 (sections 5-6 by 7 October 2028).",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7987372555623131,
+      "retrieved": [
+        {
+          "chunk_id": 4548,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 4549,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4317,
+          "source_id": "mas_feat_2018",
+          "page_start": 1,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 4290,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4416,
+          "source_id": "mas_iac_2020",
+          "page_start": 4,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.5,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-11",
+      "category": "factual",
+      "question": "What backup plan is needed in case a risky AI system breaks down?",
+      "expected_answer": "Contingency plans with fallback options such as alternative systems or manual processes, regularly reviewed and tested.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7283587777030229,
+      "retrieved": [
+        {
+          "chunk_id": 4563,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 4574,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 4582,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 30,
+          "page_end": 30
+        },
+        {
+          "chunk_id": 4578,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 27,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 4581,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 30,
+          "page_end": 30
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-12",
+      "category": "factual",
+      "question": "What factors decide how dangerous an AI use case is considered to be?",
+      "expected_answer": "Impact, complexity and reliance.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7913177348374176,
+      "retrieved": [
+        {
+          "chunk_id": 4551,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 6,
+          "page_end": 7
+        },
+        {
+          "chunk_id": 4550,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 5,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 4572,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 22,
+          "page_end": 23
+        },
+        {
+          "chunk_id": 4573,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 23,
+          "page_end": 24
+        },
+        {
+          "chunk_id": 4561,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 15,
+          "page_end": 16
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.2,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-13",
+      "category": "factual",
+      "question": "How often must a bank redo its firm-wide review of dirty money and terror funding risks?",
+      "expected_answer": "At least once every two years or on material trigger events, whichever is earlier.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7897939269955387,
+      "retrieved": [
+        {
+          "chunk_id": 4469,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 14,
+          "page_end": 14
+        },
+        {
+          "chunk_id": 4494,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 31,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 4453,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4505,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 41,
+          "page_end": 42
+        },
+        {
+          "chunk_id": 4466,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 12,
+          "page_end": 13
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-14",
+      "category": "factual",
+      "question": "How long can a bank keep a new account running while it is still checking who the customer really is?",
+      "expected_answer": "Verification should be completed within 30 business days, otherwise the bank should suspend the relationship.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7081897764717494,
+      "retrieved": [
+        {
+          "chunk_id": 4475,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 17,
+          "page_end": 17
+        },
+        {
+          "chunk_id": 4477,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 18,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 4508,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 43,
+          "page_end": 44
+        },
+        {
+          "chunk_id": 4489,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 27,
+          "page_end": 28
+        },
+        {
+          "chunk_id": 4303,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 15,
+          "page_end": 16
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 0.25,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-15",
+      "category": "factual",
+      "question": "What has to happen when a client's name matches someone on a sanctions blacklist?",
+      "expected_answer": "Freeze the assets without delay, report them promptly, and file an STR no later than 1 business day after suspicion arises.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7331106729772243,
+      "retrieved": [
+        {
+          "chunk_id": 4524,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 57
+        },
+        {
+          "chunk_id": 4494,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 31,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 4506,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 42,
+          "page_end": 42
+        },
+        {
+          "chunk_id": 4525,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 57,
+          "page_end": 57
+        },
+        {
+          "chunk_id": 4523,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 56,
+          "page_end": 56
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-16",
+      "category": "factual",
+      "question": "Which local politicians must banks treat as politically exposed?",
+      "expected_answer": "At least all Government Ministers, MPs, Nominated MPs and Non-Constituency MPs.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.665304594972159,
+      "retrieved": [
+        {
+          "chunk_id": 4499,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 36,
+          "page_end": 37
+        },
+        {
+          "chunk_id": 4295,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 4505,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 41,
+          "page_end": 42
+        },
+        {
+          "chunk_id": 4477,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 18,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 4506,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 42,
+          "page_end": 42
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-17",
+      "category": "factual",
+      "question": "Does a small firm with only a few dozen staff need to follow all the detailed accountability guidance?",
+      "expected_answer": "Firms under 50 headcount must still achieve the five outcomes but are not ordinarily expected to adopt the specific guidance.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7462315229580012,
+      "retrieved": [
+        {
+          "chunk_id": 4415,
+          "source_id": "mas_iac_2020",
+          "page_start": 3,
+          "page_end": 3
+        },
+        {
+          "chunk_id": 4430,
+          "source_id": "mas_iac_2020",
+          "page_start": 17,
+          "page_end": 18
+        },
+        {
+          "chunk_id": 4428,
+          "source_id": "mas_iac_2020",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 4431,
+          "source_id": "mas_iac_2020",
+          "page_start": 18,
+          "page_end": 19
+        },
+        {
+          "chunk_id": 4367,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 24,
+          "page_end": 24
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-18",
+      "category": "factual",
+      "question": "What results does MAS want firms to achieve in treating their customers fairly?",
+      "expected_answer": "The five fair dealing outcomes: fair dealing culture, suitable products, competent representatives, clear information, and independent, effective and prompt complaint handling.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7106211688358384,
+      "retrieved": [
+        {
+          "chunk_id": 4336,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 3,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4428,
+          "source_id": "mas_iac_2020",
+          "page_start": 14,
+          "page_end": 15
+        },
+        {
+          "chunk_id": 4429,
+          "source_id": "mas_iac_2020",
+          "page_start": 15,
+          "page_end": 16
+        },
+        {
+          "chunk_id": 4343,
+          "source_id": "mas_fair_dealing_2024",
+          "page_start": 9,
+          "page_end": 10
+        },
+        {
+          "chunk_id": 4290,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-19",
+      "category": "factual",
+      "question": "In what ways can climate change hurt a bank's finances?",
+      "expected_answer": "Through physical risk and transition risk channels.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.8298710596220255,
+      "retrieved": [
+        {
+          "chunk_id": 4437,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 4,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4436,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 3,
+          "page_end": 4
+        },
+        {
+          "chunk_id": 4445,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 10,
+          "page_end": 11
+        },
+        {
+          "chunk_id": 4438,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 5,
+          "page_end": 6
+        },
+        {
+          "chunk_id": 4443,
+          "source_id": "mas_erm_banks_2020",
+          "page_start": 9,
+          "page_end": 10
+        }
+      ],
+      "retrieval_hit": true,
+      "reciprocal_rank": 1.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    },
+    {
+      "id": "p-20",
+      "category": "factual",
+      "question": "Must a bank reveal its algorithm's code to explain an automated decision to a customer?",
+      "expected_answer": "No; clear explanations do not require exposing intellectual property or proprietary source code.",
+      "answer": "",
+      "refused": false,
+      "refusal_reason": null,
+      "top_score": 0.7167351400634564,
+      "retrieved": [
+        {
+          "chunk_id": 4290,
+          "source_id": "mas_outsourcing_banks",
+          "page_start": 5,
+          "page_end": 5
+        },
+        {
+          "chunk_id": 4493,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 30,
+          "page_end": 31
+        },
+        {
+          "chunk_id": 4485,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 24,
+          "page_end": 25
+        },
+        {
+          "chunk_id": 4486,
+          "source_id": "mas_aml_626_guidelines",
+          "page_start": 25,
+          "page_end": 26
+        },
+        {
+          "chunk_id": 4566,
+          "source_id": "mas_ai_rm_2026",
+          "page_start": 19,
+          "page_end": 19
+        }
+      ],
+      "retrieval_hit": false,
+      "reciprocal_rank": 0.0,
+      "correctness": null,
+      "judge_reasoning": null,
+      "citations_total": 0,
+      "citations_supported": 0,
+      "unverified_quotes": 0,
+      "latency_ms": null,
+      "cost_usd": null,
+      "cached": false
+    }
+  ]
+}

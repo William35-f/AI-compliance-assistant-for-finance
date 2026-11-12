@@ -289,6 +289,9 @@ MRR 0.669 to 0.819; paraphrased set 0.600 to 0.800.
   a 512 MB free instance (with the reranker off).
 - Backend tests: 128 passed, 2 skipped (live Gemini). Frontend: type-check and build pass
   (51 KB gzipped JS).
+- Docker image builds (1.53 GB: Python, ONNX Runtime, PyMuPDF, the embedding model and the 5 reports).
+  The container served `/health` (ok), the UI and all 5 reports, ran as `appuser`, and idled at
+  67 MB (the embedding model loads on the first query).
 - End-to-end smoke test on the built app: `/` serves the UI, `/sources` lists the 5 reports,
   `/stats` reports the live config's retrieval eval (hit@5 0.95), `/ask` returns a clear 503 while
   no key is configured.

@@ -17,7 +17,7 @@ from fastapi.testclient import TestClient
 from pydantic import BaseModel
 
 from regulens import db, main
-from regulens.embeddings import HashingEmbedder, get_embedder
+from regulens.embeddings import HashingEmbedder
 from regulens.extraction import (
     LLMExtraction,
     LLMFigure,
@@ -296,7 +296,7 @@ def client() -> Iterator[TestClient]:
         return AgentStep(action="final", assessment="Covered.", needs_human_review=True)
 
     main.app.dependency_overrides = {
-        get_embedder: HashingEmbedder,
+        main.get_api_embedder: HashingEmbedder,
         main.get_llm: lambda: FakeLLM(respond),
         main.get_qa_config: lambda: QAConfig(retrieval=QA_RETRIEVAL),
     }

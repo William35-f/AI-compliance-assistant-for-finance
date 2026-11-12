@@ -42,6 +42,10 @@ class Settings(BaseSettings):
     # be separated by similarity; the LLM's "answerable: false" handles those.
     min_retrieval_score: float = 0.60
 
+    # --- Public API protection ---
+    rate_limit_ask_per_minute: int = 10
+    rate_limit_heavy_per_hour: int = 6  # /extract and /risk-check (many LLM tokens/calls)
+
     # --- LLM: Google Gemini ---
     gemini_api_key: SecretStr | None = None
     gemini_model: str = "gemini-2.5-flash-lite"  # answers questions

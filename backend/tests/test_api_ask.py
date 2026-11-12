@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from regulens import main
-from regulens.embeddings import HashingEmbedder, get_embedder
+from regulens.embeddings import HashingEmbedder
 from regulens.qa import QAConfig
 from tests.conftest import QA_RETRIEVAL, requires_db
 from tests.test_qa import answering_llm
@@ -15,7 +15,7 @@ from tests.test_qa import answering_llm
 @pytest.fixture
 def client() -> Iterator[TestClient]:
     main.app.dependency_overrides = {
-        get_embedder: HashingEmbedder,
+        main.get_api_embedder: HashingEmbedder,
         main.get_llm: answering_llm,
         main.get_qa_config: lambda: QAConfig(retrieval=QA_RETRIEVAL, min_retrieval_score=0.1),
     }

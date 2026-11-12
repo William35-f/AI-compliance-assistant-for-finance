@@ -30,8 +30,23 @@ class Settings(BaseSettings):
     # Which chunk index the API searches (see regulens/index_configs.py).
     default_index: str = "baseline"
 
-    # --- LLM (used from Phase 2) ---
+    retrieval_k: int = 5
+    # Refuse without calling the LLM when the best chunk's cosine similarity is below this.
+    min_retrieval_score: float = 0.5
+
+    # --- LLM: Google Gemini ---
     gemini_api_key: SecretStr | None = None
+    gemini_model: str = "gemini-2.5-flash-lite"  # answers questions
+    gemini_judge_model: str = "gemini-2.5-flash-lite"  # grades answers in evals
+    # Client-side pacing. Free-tier limits are per model and change often;
+    # check yours at https://aistudio.google.com and keep this at or below it.
+    gemini_requests_per_minute: float = 10
+    # Gemini 3 models accept "minimal" | "low" | "medium" | "high"; None = model default.
+    gemini_thinking_level: str | None = None
+    # Paid-tier list prices (USD per 1M tokens) used to ESTIMATE cost per query.
+    # On the free tier the real cost is $0.
+    price_input_per_mtok: float = 0.10
+    price_output_per_mtok: float = 0.40
 
 
 @lru_cache

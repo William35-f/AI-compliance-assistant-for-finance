@@ -54,3 +54,36 @@ CREATE INDEX IF NOT EXISTS chunks_tsv_idx ON chunks USING gin (tsv);
 CREATE INDEX IF NOT EXISTS chunks_index_source_idx ON chunks (index_name, source_id);
 -- No approximate (HNSW) vector index on purpose: with a few thousand chunks an
 -- exact scan takes milliseconds and has perfect recall. Add HNSW past ~100k rows.
+
+-- LLM responses keyed by a hash of (model, system prompt, prompt, schema).
+-- Identical requests (e.g. re-running an eval) are answered from here for free.
+CREATE TABLE IF NOT EXISTS llm_cache (
+    key            text PRIMARY KEY,
+    model          text NOT NULL,
+    response       jsonb NOT NULL,
+    input_tokens   integer NOT NULL,
+    output_tokens  integer NOT NULL,
+    latency_ms     integer NOT NULL,  -- latency of the original (uncached) call
+    created_at     timestamptz NOT NULL DEFAULT now()
+);
+
+-- One row per answered question (API traffic and eval runs, told apart by `origin`).
+CREATE TABLE IF NOT EXISTS query_logs (
+    id                  bigserial PRIMARY KEY,
+    created_at          timestamptz NOT NULL DEFAULT now(),
+    question            text NOT NULL,
+    answer              text NOT NULL,
+    refused             boolean NOT NULL,
+    refusal_reason      text,
+    retrieved_chunk_ids bigint[] NOT NULL,
+    top_score           real,
+    latency_ms          integer NOT NULL,
+    input_tokens        integer NOT NULL,
+    output_tokens       integer NOT NULL,
+    cost_usd            numeric(12, 6) NOT NULL,
+    model               text,
+    index_name          text NOT NULL,
+    origin              text NOT NULL,  -- 'api' or 'eval'
+    cached              boolean NOT NULL DEFAULT false
+);
+CREATE INDEX IF NOT EXISTS query_logs_created_idx ON query_logs (created_at);

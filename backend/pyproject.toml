@@ -16,6 +16,7 @@ dependencies = [
     "pgvector>=0.3",        # psycopg adapter for the `vector` type
     "pymupdf>=1.24",        # PDF text extraction with fonts and positions
     "fastembed>=0.9,<0.10", # local ONNX embedding models (we use its tokenizer too)
+    "google-genai>=1.0",    # Gemini API client
 ]
 
 [project.optional-dependencies]

@@ -23,12 +23,13 @@ and flags risk disclosures that may need checking against MAS guidelines, for a 
 
 ### Phase 1: Ingestion pipeline
 
-**Step 1: collect the source documents (my task)**
+**Step 1: collect the source documents**
 
-- [ ] Download ~10 MAS guideline PDFs into `data/raw/<id>.pdf` (0 / 10)
-- [ ] Download 5 SGX annual reports into `data/raw/<id>.pdf` (0 / 5)
-- [ ] Add one row per document to `data/sources.csv`
-- [ ] `python scripts/check_sources.py` prints "All good"
+- [x] Download 10 MAS guideline PDFs into `data/raw/<id>.pdf` (10 / 10)
+- [x] Download 5 SGX annual reports into `data/raw/<id>.pdf` (5 / 5: DBS, OCBC, Singtel, Keppel, Sheng Siong)
+- [x] Add one row per document to `data/sources.csv`
+- [x] `python scripts/check_sources.py` prints "All good"
+- [x] `scripts/download_sources.py` re-downloads all PDFs from `sources.csv` in one command
 - [ ] Decide the LLM provider (Anthropic or OpenAI) and the embedding option (local model or OpenAI)
 
 **Step 2: build the pipeline (with Claude)**
@@ -80,11 +81,12 @@ for example `.venv\Scripts\python -m pytest backend`.
 ## Source documents
 
 PDFs are **not** committed (they are copyrighted). The registry of documents is
-[data/sources.csv](data/sources.csv); each row's PDF must be saved as `data/raw/<id>.pdf`.
-Check the registry with:
+[data/sources.csv](data/sources.csv) (10 MAS guidelines + 5 SGX annual reports); each row's
+PDF is saved as `data/raw/<id>.pdf`. Download them all and check the registry with:
 
 ```powershell
-python scripts/check_sources.py
+python scripts/download_sources.py   # fetches any missing PDFs from the URLs in sources.csv
+python scripts/check_sources.py      # every row has a PDF and every PDF has a row
 ```
 
 ## Repository layout

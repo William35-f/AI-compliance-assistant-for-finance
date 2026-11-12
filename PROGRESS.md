@@ -43,6 +43,42 @@
 | `sources.csv` read as `utf-8-sig`, dates must be `YYYY-MM-DD` | The CSV will likely be edited in Excel on Windows, which adds a BOM and may reformat dates. Validation catches this early. |
 | Postgres host port is configurable (`POSTGRES_PORT`) | Avoids clashes with other local Postgres installs. |
 
+---
+
+## Phase 1: Ingestion pipeline (in progress)
+
+### Step 1: source documents (2026-11-12)
+- `data/sources.csv` has 15 documents: 10 MAS regulations, 5 SGX annual reports.
+  `scripts/download_sources.py` fetched all 15 with 0 failures, and `check_sources.py` passes.
+- Checked each file with PyMuPDF. All have extractable text (no OCR needed):
+
+| id | PDF pages | Main units found in text |
+|---|---|---|
+| mas_trm_2021 | 57 | – |
+| mas_outsourcing_banks | 25 | – |
+| mas_feat_2018 | 15 | – |
+| mas_fair_dealing_2024 | 40 | – |
+| mas_bcm_2022 | 24 | – |
+| mas_iac_2020 | 23 | – |
+| mas_erm_banks_2020 | 12 | – |
+| mas_aml_626_guidelines | 70 | – |
+| mas_cyber_hygiene_fsm_n06 | 4 | – |
+| mas_ai_rm_2026 | 30 | – |
+| ar_dbs_fy2025 | 107 | $ million |
+| ar_ocbc_fy2025 | 276 | $ million |
+| ar_singtel_fy2026 | 284 | S$ million |
+| ar_keppel_fy2025 | 245 | $'000 (and some $ million) |
+| ar_shengsiong_fy2025 | 128 | S$'000 |
+
+### Decisions
+| Decision | Why |
+|---|---|
+| Use MAS Notice **FSM-N06** on Cyber Hygiene, not Notice 655 | Notice 655 was cancelled on 10 May 2024 and replaced by FSM-N06. |
+| Use the final **Guidelines on AI Risk Management (7 Oct 2026)**, not the 2024 AI model risk information paper | The final guidelines are current and directly relevant to an AI compliance tool. |
+| Annual reports: 2 banks, 1 telco, 1 conglomerate, 1 retailer | A mix of reporting units (`$ million` vs `S$'000`) to test unit handling in Phase 5. |
+| Citations use the **PDF page index**, not the printed page number | DBS's PDF puts two printed pages side by side on each PDF page, so printed numbers don't match. The PDF index is what a reader's viewer shows. |
+| Added `scripts/download_sources.py` | PDFs are not in git, so anyone cloning the repo can rebuild `data/raw/` in one command. It rejects responses that don't start with `%PDF` (e.g. HTML error pages). |
+
 ### Open questions for later phases
 - **Embeddings (Phase 1):** Anthropic has no embeddings API. If the LLM provider is Anthropic,
   embeddings need OpenAI or a local model (e.g. a small sentence-transformers model). To be decided

@@ -3,9 +3,9 @@
 ## Phases
 
 - [x] **Phase 0: Setup** (2026-11-12)
-- [ ] Phase 1: Ingestion pipeline
-- [ ] Phase 2: Q&A with citations
-- [ ] Phase 3: Evaluation harness
+- [x] **Phase 1: Ingestion pipeline** (2026-11-12)
+- [~] Phase 2: Q&A with citations (built and tested with a fake LLM; live Gemini check waits for the API key)
+- [~] Phase 3: Evaluation harness (built; 90 questions; retrieval baseline measured; LLM-judged baseline waits for the API key)
 - [ ] Phase 4: Retrieval experiments
 - [ ] Phase 5: Report extraction and risk agent
 - [ ] Phase 6: Frontend, CI and deployment
@@ -45,7 +45,7 @@
 
 ---
 
-## Phase 1: Ingestion pipeline (in progress)
+## Phase 1: Ingestion pipeline
 
 ### Step 1: source documents (2026-11-12)
 - `data/sources.csv` has 15 documents: 10 MAS regulations, 5 SGX annual reports.
@@ -79,9 +79,117 @@
 | Citations use the **PDF page index**, not the printed page number | DBS's PDF puts two printed pages side by side on each PDF page, so printed numbers don't match. The PDF index is what a reader's viewer shows. |
 | Added `scripts/download_sources.py` | PDFs are not in git, so anyone cloning the repo can rebuild `data/raw/` in one command. It rejects responses that don't start with `%PDF` (e.g. HTML error pages). |
 
-### Open questions for later phases
-- **Embeddings (Phase 1):** Anthropic has no embeddings API. If the LLM provider is Anthropic,
-  embeddings need OpenAI or a local model (e.g. a small sentence-transformers model). To be decided
-  in Phase 1, keeping the embedder swappable like the LLM.
+### Step 2: the pipeline
+
+**Built**
+- `pdf_parser.py`: PyMuPDF lines with font size/bold/position become paragraphs tagged with their
+  PDF page and nearest heading. Removes running headers/footers (short margin lines repeated on
+  >=30% of pages), table-of-contents pages and superscript footnote markers; joins wrapped lines.
+- `chunking.py`: section-aware chunker. Packs whole sentences up to `chunk_size` tokens (default
+  600) with `overlap` tokens (default 100) of whole sentences; never mixes two headings; merges
+  tiny sections forward. Token counts use the embedding model's own tokenizer.
+- `embeddings.py`: `Embedder` interface; `FastEmbedEmbedder` runs **nomic-embed-text-v1.5
+  (quantised, 768 dims)** locally via ONNX; `HashingEmbedder` for tests.
+- `ingestion.py` + `scripts/ingest.py`: parse, chunk, embed, store in `chunks` (pgvector + a
+  generated `tsvector` with a GIN index). Chunks are stored per **named index**
+  (`index_configs.py`) so variants can coexist for experiments.
+- Idempotency: a fingerprint of PDF hash + parser version + chunk settings + embedder is stored per
+  (index, document). Same fingerprint: skip. Otherwise delete + insert in one transaction.
+  `ingest.py` also prunes documents removed from `sources.csv`.
+
+**Results (measured)**
+- Full ingest of 15 documents: 2,360 chunks in 392 s on a laptop CPU (about 4 chunks/s for
+  embedding). Re-running skips all 15 documents in under a second.
+- Chunk sizes: regulations 366 chunks, median 263 tokens; annual reports 1,994 chunks, median 301.
+- `pytest backend`: 58 tests at the end of Phase 1 (parser, chunker, idempotent ingest, pruning).
+
+**Senior-engineer critique and the fixes it led to**
+
+| Problem found (with evidence) | Fix | After |
+|---|---|---|
+| Annual reports shattered into tiny chunks: median 117 tokens, 1,674 of 3,741 under 100 tokens. KPI call-outs and director names were detected as headings. | Annual reports merge sections under 200 tokens (`REPORT_MIN_SECTION_TOKENS`); MAS guidelines keep strict sections. | 1,994 chunks, median 301, 8 under 100 |
+| Footnote markers glued to words ("notification19") in 90 regulation chunks, which breaks full-text search. | Drop superscript digit spans (PyMuPDF flag bit 1); parser version bumped so everything re-ingested automatically. | 0 |
+| Table-of-contents pages produced junk headings ("3.2" plus dot leaders). | Drop pages with >=5 dot-leader lines; dot-leader lines never count as headings. | TRM headings now "4.2 Risk Identification" etc. |
+| Bold phrases wrapping mid-sentence detected as headings ("policies, and practices across..."). | Headings may not start lowercase or end on a connector word ("the", "of", "and"...). | AI guideline headings clean |
+| ONNX Runtime `bad_alloc` during the first full ingest (batch 16 x ~600 tokens, ~2 GB RSS). | Embed in batches of 8. | Full ingest completes |
+| Documents removed from sources.csv stayed in the index, and skipped documents kept stale titles. | `prune_index`; metadata upserted on every run. | Tested |
+
+### Decisions
+
+| Decision | Why |
+|---|---|
+| Local embedding model (nomic-embed-text-v1.5-Q) instead of Gemini embeddings | No API cost or rate limits (the Gemini free tier is tight), and repeatable experiments. It accepts 8,192 tokens, so 600-token chunks are embedded whole; bge-small cuts input at 512. |
+| Exact vector search, no HNSW index | About 2.4k chunks: an exact scan takes milliseconds and has perfect recall. HNSW pays off past ~100k rows. |
+| `vector` column without a fixed dimension | The model can change without a migration; ingest refuses to mix dimensions within one index. |
+| Per-document transactions (autocommit connection + `conn.transaction()`) | A failure on document 10 must not roll back documents 1-9. |
+| Chunk size measured in the embedding model's tokens | "600 tokens" means exactly what the model sees. |
+
+---
+
+## Phase 2: Q&A with citations (built; live check pending the Gemini key)
+
+**Built**
+- `retrieval.py`: vector search (cosine) over `regulation` chunks of a named index.
+- `llm.py`: `LLMClient` interface with `GeminiClient` (structured JSON via `response_json_schema`,
+  temperature 0, client-side pacing per model, retries on 429/5xx honouring the server's
+  `retryDelay`, daily-quota errors raised immediately), `CachedLLM` (responses stored in Postgres
+  `llm_cache`, keyed by a hash of model + prompts + schema) and `FakeLLM` for tests.
+- `qa.py`: the prompt labels passages C1..Ck; the LLM returns claims, each citing passage ids with
+  a verbatim quote. Code then drops citations to non-existent passages, **verifies every quote
+  against the chunk text** (if it is not verbatim, the closest real sentence is shown and the
+  citation is marked `quote_verified: false`) and drops claims left without a citation.
+- Guardrails: reply "I couldn't find this in the sources." when the best cosine similarity is below
+  `MIN_RETRIEVAL_SCORE` (no LLM call), when the model says the passages don't answer it, or when no
+  claim keeps a valid citation. Every response carries a not-legal-advice disclaimer.
+- `POST /ask` returns `{answer, citations[{marker, source_id, title, page, page_end, quote,
+  quote_verified}], refused, refusal_reason, retrieved_chunk_ids, top_score, latency_ms, tokens,
+  cost_usd, model, cached, disclaimer}`. Every query is logged to `query_logs`.
+
+**Decisions**
+
+| Decision | Why |
+|---|---|
+| Gemini (free key) behind a provider-neutral interface | User's choice. The rest of the code only sees `generate_json(system, prompt, schema)`. |
+| Claims + per-citation quotes instead of free text with [n] | Lets code verify every citation mechanically, and the UI can show the exact quoted passage. |
+| Cache LLM responses in Postgres; a cache hit reports the original latency/tokens | Re-running evals costs nothing on a tight free tier, and statistics stay honest. |
+| `cost_usd` is an estimate at the paid-tier list price | On the free tier real cost is $0; the estimate shows what it would cost in production. |
+
+---
+
+## Phase 3: Evaluation harness (built; LLM-judged run pending the Gemini key)
+
+**Built**
+- `eval/questions.jsonl`: **90 questions**: 72 factual, 8 multi-hop (each spanning two MAS
+  documents), 10 out-of-scope (several deliberately near-domain: SORA rate, Notice 637 capital
+  ratios, EU AI Act, DBS profit). Every in-scope question has its expected PDF page(s).
+  *Authorship note:* the brief planned for the student to write these. At the user's request they
+  were drafted by Claude from the source PDFs, page by page; each expected answer and page was
+  checked against the PDF text. A human review of a sample is still recommended.
+- `regulens/evaluation.py` + `eval/run_eval.py`: hit@k and MRR (page-range overlap; multi-hop needs
+  every source), LLM-judge correctness (0 / 0.5 / 1 rubric), citation accuracy (the judge checks
+  each [n] marker against its passage), out-of-scope refusal rate, false-refusal rate, p50/p95
+  latency, average cost. `--retrieval-only` scores retrieval with no LLM calls. Each run is saved as
+  JSON in `eval/results/` and adds a row to `eval/results/summary.md`.
+- `eval/judge_agreement.py`: samples 20 judged answers into a CSV for blind human grading and
+  computes judge-human agreement.
+
+**Results (measured)**
+
+| Run | hit@5 | MRR | Notes |
+|---|---|---|---|
+| baseline-vector-k5 (retrieval only) | 0.800 | 0.669 | 80 in-scope questions |
+
+Misses worth noting: all 5 questions on the 4-page cyber hygiene notice miss. The relevant chunk
+packs six different controls together, and the questions use terms ("FSM-N06", "multi-factor
+authentication") that keyword search would match but the diluted embedding does not rank highly.
+This motivates the hybrid-search and heading-in-embedding experiments in Phase 4.
+
+---
+
+## Open questions / notes
+- **Gemini free-tier limits** (reported late 2026, not guaranteed): about 5 RPM / 20 RPD for Flash
+  and 15 RPM / 500 RPD for Flash-Lite, per project. A 90-question run needs about 170 calls (answer
+  + judge), so the default model is Flash-Lite, requests are paced, and every response is cached.
 - Local dev note: port 8000 was already in use on the dev machine, so the API was tested on 8001.
-- Starlette prints a deprecation warning about `httpx` in the TestClient. It's harmless; revisit when upgrading.
+- Starlette prints a deprecation warning about `httpx` in the TestClient. It's harmless; revisit
+  when upgrading.

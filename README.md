@@ -6,7 +6,7 @@ document-and-page citation for every claim. It extracts key figures (revenue, ne
 total debt, risk disclosures) from SGX-listed companies' annual reports into validated JSON,
 and flags risk disclosures that may need checking against MAS guidelines, for a human to review.
 
-> Status: **Phase 0 (setup) complete, Phase 1 in progress.** See [PROGRESS.md](PROGRESS.md)
+> Status: **Phases 0-1 complete; Phases 2-3 built, waiting for a Gemini API key for live runs.** See [PROGRESS.md](PROGRESS.md)
 > for the detailed build log, design decisions and (once measured) evaluation results.
 
 ## Progress
@@ -14,9 +14,9 @@ and flags risk disclosures that may need checking against MAS guidelines, for a 
 | Phase | Status |
 |---|---|
 | 0. Setup (Docker, Postgres + pgvector, FastAPI `/health`, sources registry) | ✅ Done |
-| 1. Ingestion pipeline | 🟡 In progress |
-| 2. Q&A with citations | ⬜ Not started |
-| 3. Evaluation harness | ⬜ Not started |
+| 1. Ingestion pipeline | ✅ Done |
+| 2. Q&A with citations | 🟡 Built, needs Gemini key for a live check |
+| 3. Evaluation harness | 🟡 Built, retrieval baseline measured |
 | 4. Retrieval experiments | ⬜ Not started |
 | 5. Report extraction and risk agent | ⬜ Not started |
 | 6. Frontend, CI and deployment | ⬜ Not started |
@@ -30,17 +30,34 @@ and flags risk disclosures that may need checking against MAS guidelines, for a 
 - [x] Add one row per document to `data/sources.csv`
 - [x] `python scripts/check_sources.py` prints "All good"
 - [x] `scripts/download_sources.py` re-downloads all PDFs from `sources.csv` in one command
-- [ ] Decide the LLM provider (Anthropic or OpenAI) and the embedding option (local model or OpenAI)
+- [x] Decide the LLM provider (Gemini, free key) and the embedding option (local nomic-embed-text-v1.5)
 
 **Step 2: build the pipeline (with Claude)**
 
-- [ ] Parse PDFs with PyMuPDF, keeping the page number and nearest section heading
-- [ ] Section-aware chunker (~500–800 tokens, with overlap, configurable size)
-- [ ] Unit tests for the chunker
-- [ ] Swappable embedder (same small-interface idea as the LLM)
-- [ ] `chunks` table in pgvector with metadata (source_id, page, heading, text) + full-text index
-- [ ] `scripts/ingest.py` is idempotent (re-running creates no duplicates)
-- [ ] Ingest all documents and record chunk counts in PROGRESS.md
+- [x] Parse PDFs with PyMuPDF, keeping the page number and nearest section heading
+- [x] Section-aware chunker (~500–800 tokens, with overlap, configurable size)
+- [x] Unit tests for the chunker
+- [x] Swappable embedder (same small-interface idea as the LLM)
+- [x] `chunks` table in pgvector with metadata (source_id, page, heading, text) + full-text index
+- [x] `scripts/ingest.py` is idempotent (re-running creates no duplicates)
+- [x] Ingest all documents and record chunk counts in PROGRESS.md (15 docs, 2,360 chunks)
+
+### Phase 2: Q&A with citations
+
+- [x] `POST /ask` with vector retrieval (k = 5) and Gemini behind a swappable interface
+- [x] Answers as claims with chunk citations + verbatim quotes, validated by Pydantic
+- [x] Quotes verified against the source text; refusal guardrails; not-legal-advice disclaimer
+- [x] Every query logged to `query_logs`
+- [ ] Live check against Gemini (needs `GEMINI_API_KEY` in `.env`)
+
+### Phase 3: Evaluation harness
+
+- [x] 90 eval questions (72 factual, 8 multi-hop, 10 out-of-scope) with expected pages
+- [x] `eval/run_eval.py`: hit@k, MRR, judged correctness, citation accuracy, refusals, latency, cost
+- [x] `eval/judge_agreement.py` for checking the LLM judge against a human
+- [x] Retrieval baseline: hit@5 = 0.800, MRR = 0.669
+- [ ] Full LLM-judged baseline (needs the Gemini key)
+- [ ] Judge-human agreement on 20 sampled answers
 
 ## Tech stack
 
@@ -101,4 +118,8 @@ scripts/     command-line tools (source checks, ingestion)
 
 ## Evaluation results
 
-Nothing measured yet. Only numbers produced by `eval/run_eval.py` will appear here.
+Only numbers produced by `eval/run_eval.py` appear here (full log: [eval/results/summary.md](eval/results/summary.md)).
+
+| Config | hit@5 | MRR | Answer correctness | Citation accuracy | OOS refusal |
+|---|---|---|---|---|---|
+| Vector only, k = 5 (baseline) | 0.800 | 0.669 | pending Gemini key | pending | pending |

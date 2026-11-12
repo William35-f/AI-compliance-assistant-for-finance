@@ -28,8 +28,12 @@ class RetrievedChunk:
     score: float  # cosine similarity for vector search (higher = more similar)
 
 
+RETRIEVAL_MODES = ("vector",)
+
+
 @dataclass(frozen=True)
 class RetrievalConfig:
+    mode: str = "vector"
     index_name: str = "baseline"
     k: int = 5  # chunks handed to the LLM
     doc_types: tuple[str, ...] = ("regulation",)  # Q&A answers from MAS guidelines only

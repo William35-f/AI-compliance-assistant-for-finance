@@ -97,6 +97,7 @@ class AskResponse(BaseModel):
     tokens: TokenUsage
     cost_usd: float
     model: str | None
+    cached: bool = False  # True if the LLM answer came from the response cache
     disclaimer: str = DISCLAIMER
 
 
@@ -273,9 +274,10 @@ def answer_question(
     if usage is not None and usage.cached:
         elapsed += usage.latency_ms
     response.latency_ms = elapsed
+    response.cached = bool(usage and usage.cached)
 
     if log_origin:
-        log_query(conn, question, response, config, log_origin, cached=bool(usage and usage.cached))
+        log_query(conn, question, response, config, log_origin)
     return response
 
 
@@ -285,7 +287,6 @@ def log_query(
     response: AskResponse,
     config: QAConfig,
     origin: str,
-    cached: bool = False,
 ) -> None:
     conn.execute(
         """
@@ -308,7 +309,7 @@ def log_query(
             response.model,
             config.retrieval.index_name,
             origin,
-            cached,
+            response.cached,
         ),
     )
     conn.commit()

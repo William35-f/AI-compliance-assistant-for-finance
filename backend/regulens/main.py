@@ -13,12 +13,12 @@ from pathlib import Path
 from typing import Annotated, Literal
 
 import psycopg
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Response, UploadFile, status
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Response, UploadFile, status
 from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from regulens import __version__, db
+from regulens import __version__, db, page_view
 from regulens.config import RAW_DIR, REPO_ROOT, SOURCES_CSV, get_settings
 from regulens.embeddings import Embedder, get_embedder
 from regulens.extraction import ExtractionResult, KeyRisk, extract_report
@@ -304,6 +304,62 @@ def list_sources(
         for s in load_sources(SOURCES_CSV)
         if doc_type is None or s.doc_type == doc_type
     ]
+
+
+class SourceParagraph(BaseModel):
+    label: str | None  # the document's own paragraph number ("4.1.1", "(g)")
+    heading: str | None
+    text: str
+    cited: bool
+
+
+class SourcePage(BaseModel):
+    source_id: str
+    title: str
+    publisher: str
+    url: str
+    page: int
+    page_count: int
+    paragraphs: list[SourceParagraph]
+    cited_found: bool  # False when a quote was given but not located on this page
+
+
+@app.get("/sources/{source_id}/pages/{page}", response_model=SourcePage)
+def source_page(
+    source_id: str,
+    page: int,
+    quote: Annotated[str | None, Query(max_length=2000)] = None,
+    through: Annotated[int | None, Query(ge=1)] = None,
+) -> SourcePage:
+    """One page of a source as paragraphs, with the paragraph holding `quote` flagged.
+
+    A citation can span pages (`page`..`through`); the page where the quote is
+    actually found is returned, so the reader lands on the highlighted text.
+    """
+    source = next((s for s in load_sources(SOURCES_CSV) if s.id == source_id), None)
+    if source is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Unknown source '{source_id}'.")
+    path = source.pdf_path(RAW_DIR)
+    if not path.is_file():
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, f"The PDF for '{source_id}' isn't on this server."
+        )
+    paragraphs, page_count = page_view.load_document(path)
+    if not 1 <= page <= page_count:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, f"Page {page} is outside 1–{page_count}.")
+    last = min(max(through or page, page), page_count)
+    shown = page_view.find_cited_page(paragraphs, page, last, quote)
+    items = page_view.page_paragraphs(paragraphs, shown, quote)
+    return SourcePage(
+        source_id=source.id,
+        title=source.title,
+        publisher=source.publisher,
+        url=str(source.url),
+        page=shown,
+        page_count=page_count,
+        paragraphs=[SourceParagraph(**vars(p)) for p in items],
+        cited_found=any(p.cited for p in items),
+    )
 
 
 # --------------------------------------------------------------------------- stats

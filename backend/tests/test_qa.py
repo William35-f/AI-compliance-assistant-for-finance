@@ -15,6 +15,7 @@ from regulens.qa import (
     answer_question,
     assemble_answer,
     build_prompt,
+    checked_summary,
     verify_quote,
 )
 from regulens.retrieval import RetrievedChunk
@@ -77,6 +78,27 @@ def test_same_quote_reuses_marker() -> None:
     assert len(citations) == 1
 
 
+@pytest.mark.parametrize(
+    ("summary", "expected"),
+    [
+        ("Notify MAS within  1 hour.", "Notify MAS within 1 hour."),  # whitespace tidied
+        ("Notify MAS within 2 hours.", None),  # a number the claims don't contain
+        ("", None),
+        ("x" * 200, None),  # too long for a heading
+    ],
+)
+def test_checked_summary_keeps_only_numbers_the_claims_support(
+    summary: str, expected: str | None
+) -> None:
+    answer = "Banks must notify MAS within 1 hour. [1] A report follows within 14 days. [2]"
+    assert checked_summary(summary, answer) == expected
+
+
+def test_checked_summary_ignores_citation_markers() -> None:
+    # "[2]" is a marker, not a fact, so it can't vouch for a "2" in the summary.
+    assert checked_summary("Report within 2 days.", "Report within 14 days. [2]") is None
+
+
 def test_build_prompt_labels_passages_with_title_and_pages() -> None:
     prompt = build_prompt("When?", [chunk(), chunk(2)])
     assert '<passage id="C1">' in prompt and '<passage id="C2">' in prompt
@@ -94,6 +116,7 @@ def answering_llm() -> FakeLLM:
         return LLMAnswer(
             answerable=True,
             claims=[claim("Notify MAS within one hour.", ("C1", "notify MAS within one hour"))],
+            summary="Notify MAS within one hour.",
         )
 
     return FakeLLM(respond)
@@ -115,6 +138,7 @@ def test_answers_with_citation_and_logs(qa_index: None, embedder: HashingEmbedde
 
     assert not result.refused
     assert result.answer == "Notify MAS within one hour. [1]"
+    assert result.summary == "Notify MAS within one hour."
     assert result.citations[0].source_id == "test_qa_doc"
     assert result.citations[0].page == 1
     assert result.citations[0].quote_verified

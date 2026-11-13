@@ -22,7 +22,7 @@ flowchart LR
     end
     EMB --> DB[("Postgres 16 + pgvector<br/>vectors + tsvector index")]
 
-    UI["React app<br/>Ask / Extract / Stats"] --> API["FastAPI<br/>rate limits + caches"]
+    UI["React app<br/>Ask / Extract / Risk check / Stats"] --> API["FastAPI<br/>rate limits + caches"]
 
     API -- "/ask" --> RET["Hybrid retrieval<br/>vector + BM25 (SQL), RRF"]
     RET --> DB
@@ -53,11 +53,20 @@ Only numbers produced by the scripts appear here (full log: [eval/results/summar
 
 | Config | hit@5 | MRR | Answer correctness | Citation accuracy | Out-of-scope refusal | p50 / p95 latency |
 |---|---|---|---|---|---|---|
-| Baseline: vector, k = 5 | 0.800 | 0.669 | pending Gemini run | pending | pending | pending |
-| **Chosen: heading embedding + hybrid, k = 5** | **0.950** | **0.819** | pending Gemini run | pending | pending | pending |
+| Baseline: vector, k = 5 | 0.800 | 0.669 | not run yet | – | – | – |
+| **Chosen: heading embedding + hybrid, k = 5** | **0.950** | **0.819** | **0.900** | **0.993** | **1.000** | 6.2 s / 83 s* |
 
-Extraction accuracy on the 5 annual reports (`eval/run_extraction_eval.py`): pending Gemini run.
-Page selection already finds the correct statement page for **15 of 15** fields (tested).
+Chosen config in more detail (run `20261112T154112Z`, `gemini-3.5-flash-lite` answering and judging):
+factual 0.917, multi-hop 0.750; false refusals 4 of 80 in-scope questions (0.05); 2% of quotes
+not verbatim (shown as "closest match"); estimated cost $0.0003 per question at paid-tier prices.
+
+\* Latency was measured on the free tier during a period of "model overloaded" (503) errors and
+includes retry waits; the p95 mostly measures Gemini's free-tier queue, not ReguLens.
+
+Extraction on the 5 annual reports (`eval/run_extraction_eval.py`): revenue, net profit and total
+debt **15 of 15 correct**, each on the right page and verified on it; fiscal year, currency and
+key risks 5 of 5; company name 4 of 5 (the model wrote OCBC as "Overseas-Chinese" instead of
+"Oversea-Chinese").
 
 ## Experiments (Phase 4)
 
@@ -146,7 +155,7 @@ uvicorn regulens.main:app --reload --port 8001   # docs at http://127.0.0.1:8001
 cd frontend; npm install; npm run dev        # http://localhost:5173
 
 # 7. Tests, lint, evals
-pytest backend                               # 125 tests; live Gemini tests run with -m live
+pytest backend                               # 152 tests; live Gemini tests run with -m live
 ruff check backend scripts eval
 python eval/run_eval.py --name my-run --retrieval-only   # free, no LLM calls
 python eval/run_eval.py --name my-run                    # full run, uses Gemini
@@ -167,6 +176,7 @@ Or run everything in one container: `docker build -t regulens .` then
 | `POST /extract` (PDF upload or `source_id`) | Company, fiscal year, currency, revenue, net profit, total debt (with components), key risks; each with page + verification flag |
 | `POST /risk-check` `{risks}` or `{source_id}` | Per risk: related MAS guideline passages with quotes, assessment, `needs_human_review` |
 | `GET /stats` | Query count, p50/p95 latency, average cost, refusals, cache hits, latest eval scores |
+| `GET /sources/{id}/pages/{page}?quote=` | One page as paragraphs (with the document's own paragraph numbers), the paragraph holding the quote flagged; powers the source panel |
 | `GET /sources`, `GET /health` | Document registry; liveness/readiness (503 if the database is down) |
 
 ## Limitations
@@ -177,7 +187,9 @@ Or run everything in one container: `docker build -t regulens .` then
 - **LLM judge bias.** The judge is a Gemini model grading Gemini answers; `eval/judge_agreement.py`
   measures agreement with a human on a sample to keep it honest.
 - **Free-tier constraints.** Gemini's free quota allows a few hundred requests a day, which limits
-  how many full evals and demo queries can run; costs shown are estimates at paid list prices.
+  how many full evals and demo queries can run, and free-tier models are often overloaded (503),
+  which makes latency unpredictable. Costs shown are estimates at paid list prices; the real cost
+  on the free tier is $0.
 - **PDF heuristics.** Heading detection and statement-page selection are rules tuned on these
   documents. Scanned PDFs (no text layer) are not supported, and complex tables can be misread;
   every extracted number is therefore verified on its page and flagged when it can't be.
@@ -197,7 +209,7 @@ Or run everything in one container: `docker build -t regulens .` then
 ## Repository layout
 
 ```
-backend/     FastAPI app (package `regulens`) and 125 tests
+backend/     FastAPI app (package `regulens`) and 154 tests
 frontend/    React + TypeScript app (Ask, Extract, Stats)
 eval/        questions, extraction truth, eval scripts and saved results
 data/        sources.csv (committed); raw/ PDFs (git-ignored, see scripts/download_sources.py)
@@ -212,10 +224,10 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 |---|---|
 | 0. Setup (Docker, Postgres + pgvector, FastAPI `/health`, sources registry) | ✅ Done |
 | 1. Ingestion pipeline | ✅ Done |
-| 2. Q&A with citations | 🟡 Built and tested with a fake LLM; live Gemini check pending the API key |
-| 3. Evaluation harness | 🟡 Built; retrieval baseline measured; LLM-judged runs pending the API key |
+| 2. Q&A with citations | ✅ Done (live on Gemini) |
+| 3. Evaluation harness | ✅ Done; first LLM-judged run: correctness 0.90, citation accuracy 0.99 |
 | 4. Retrieval experiments | ✅ Done (retrieval metrics) |
-| 5. Report extraction and risk agent | 🟡 Built and tested; accuracy run pending the API key |
+| 5. Report extraction and risk agent | ✅ Done; extraction 15/15 numbers correct |
 | 6. Frontend, CI and deployment | 🟡 Built; deployment needs your Render/Neon accounts |
 
 <details>
@@ -234,14 +246,14 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 - [x] `POST /ask` with retrieval + Gemini behind a swappable interface
 - [x] Claims with chunk citations + verbatim quotes, validated by Pydantic and checked in code
 - [x] Refusal guardrails; not-legal-advice disclaimer; every query logged to `query_logs`
-- [ ] Live check against Gemini (needs `GEMINI_API_KEY` in `.env`)
+- [x] Live check against Gemini
 
 ### Phase 3: Evaluation harness
 - [x] 90 eval questions (72 factual, 8 multi-hop, 10 out-of-scope) with expected pages
 - [x] `eval/run_eval.py`: hit@k, MRR, judged correctness, citation accuracy, refusals, latency, cost
 - [x] `eval/judge_agreement.py` for checking the LLM judge against a human
 - [x] Retrieval baseline: hit@5 = 0.800, MRR = 0.669
-- [ ] Full LLM-judged baseline (needs the Gemini key)
+- [x] Full LLM-judged run of the chosen config (correctness 0.900)
 - [ ] Judge-human agreement on 20 sampled answers
 
 ### Phase 4: Retrieval experiments
@@ -250,7 +262,7 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 - [x] Paraphrased question set to check for lexical bias in the eval
 - [x] Confidence intervals and paired wins/losses (`eval/compare_runs.py`)
 - [x] Winner: heading embedding + hybrid (hit@5 0.800 to 0.950); reranker and chunk-size changes did not help
-- [ ] Full LLM-judged comparison of baseline vs chosen config (needs the Gemini key)
+- [ ] Full LLM-judged comparison of baseline vs chosen config (~170 more free-tier calls)
 
 ### Phase 5: Report extraction and risk agent
 - [x] Ground truth for the 5 reports, read from their audited statements (`eval/extraction_truth.jsonl`)
@@ -258,10 +270,11 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 - [x] `POST /extract`: LLM copies numbers + unit labels; code converts units, sums debt, verifies on page
 - [x] `POST /risk-check`: plain-Python agent loop (max 3 steps) with a guideline search tool
 - [x] Prompt-injection defences tested (an injected number can never pass verification)
-- [ ] Extraction accuracy run and live injection test (need the Gemini key)
+- [x] Extraction accuracy run (15/15 numbers) and live injection test (passed)
 
 ### Phase 6: Frontend, CI and deployment
 - [x] React app: Ask (clickable citations), Extract (table + risk check), Stats
+- [x] Ask redesign: answer beside the cited page, cited paragraph highlighted (located for 147/147 eval citations)
 - [x] Rate limiting; caches for repeated questions and query embeddings
 - [x] GitHub Actions: lint, tests with pgvector, frontend build, 20-question smoke eval gate
 - [x] Dockerfile (one image: API + frontend + embedding model) and [DEPLOY.md](DEPLOY.md)

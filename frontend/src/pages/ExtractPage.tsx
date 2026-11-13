@@ -1,5 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { api, ApiError, ExtractionResult, Figure, RiskCheckResult, SourceInfo } from "../api";
+import RiskResults from "../components/RiskResults";
 import { formatAsReported, formatMoney, formatMs, formatUsd } from "../format";
 
 const FIELD_LABELS: [keyof Pick<ExtractionResult, "revenue" | "net_profit" | "total_debt">, string][] = [
@@ -9,11 +10,11 @@ const FIELD_LABELS: [keyof Pick<ExtractionResult, "revenue" | "net_profit" | "to
 ];
 
 function VerifiedBadge({ figure }: { figure: Figure }) {
-  if (figure.value === null) return <span className="pill neutral">not found</span>;
+  if (figure.value === null) return <span className="status">Not found</span>;
   return figure.verified ? (
-    <span className="pill ok" title="The number appears on the cited financial-statement page">✓ verified</span>
+    <span className="status" title="The number appears on the cited financial-statement page">Verified on page</span>
   ) : (
-    <span className="pill warn" title="Could not confirm this number on the cited page">check</span>
+    <span className="status is-flag" title="This number couldn't be confirmed on the cited page">Check the page</span>
   );
 }
 
@@ -60,7 +61,7 @@ export default function ExtractPage() {
   return (
     <div className="stack">
       <div className="page-intro">
-        <h1>Extract from an annual report</h1>
+        <h1>Extract from a report</h1>
         <p>
           Pulls revenue, net profit, total debt and the main risk disclosures from an SGX-listed company's
           annual report. The model copies numbers as printed; ReguLens converts the units and checks each
@@ -82,13 +83,13 @@ export default function ExtractPage() {
           <span>Upload a PDF (max 40 MB)</span>
           <input type="file" accept="application/pdf" onChange={onFile} />
         </label>
-        <button type="button" className="primary" onClick={extract}
+        <button type="button" className="button-primary" onClick={extract}
                 disabled={busy !== null || (!file && !sourceId)}>
           {busy === "extract" ? "Reading report…" : "Extract"}
         </button>
       </div>
 
-      {error && <div className="answer error">{error}</div>}
+      {error && <p className="error-box" role="alert">{error}</p>}
 
       {result && (
         <section className="panel">
@@ -97,11 +98,11 @@ export default function ExtractPage() {
               <h2>{result.company}</h2>
               <p className="muted">
                 {result.fiscal_year}
-                {result.fiscal_year_end ? ` · year ended ${result.fiscal_year_end}` : ""} · {result.currency}
+                {result.fiscal_year_end ? `, year ended ${result.fiscal_year_end}` : ""}. Figures in {result.currency}.
               </p>
             </div>
             <dl className="meta-row">
-              <div><dt>Latency</dt><dd>{formatMs(result.latency_ms)}</dd></div>
+              <div><dt>Response time</dt><dd>{formatMs(result.latency_ms)}</dd></div>
               <div><dt>Est. cost</dt><dd>{formatUsd(result.cost_usd)}</dd></div>
             </dl>
           </header>
@@ -143,45 +144,18 @@ export default function ExtractPage() {
           <h3>Key risk disclosures</h3>
           <ul className="risks">
             {result.key_risks.map((r) => (
-              <li key={r.title}><strong>{r.title}</strong> <span className="muted">p. {r.page}</span><br />{r.summary}</li>
+              <li key={r.title}><strong>{r.title}</strong> <span className="muted">(page {r.page})</span><br />{r.summary}</li>
             ))}
           </ul>
 
-          <button type="button" className="secondary" disabled={busy !== null || result.key_risks.length === 0}
+          <button type="button" className="button-secondary" disabled={busy !== null || result.key_risks.length === 0}
                   onClick={() => void run("risk", () => api.riskCheck(result.key_risks, 3), setRisk)}>
             {busy === "risk" ? "Checking against MAS guidelines…" : "Check top 3 risks against MAS guidelines"}
           </button>
         </section>
       )}
 
-      {risk && (
-        <section className="panel">
-          <h2>Risk check against MAS guidelines</h2>
-          <p className="muted">{risk.disclaimer} · {formatMs(risk.latency_ms)} · est. {formatUsd(risk.cost_usd)}</p>
-          {risk.assessments.map((a) => (
-            <article key={a.risk.title} className="assessment">
-              <header>
-                <h3>{a.risk.title}</h3>
-                <span className={a.needs_human_review ? "pill warn" : "pill ok"}>
-                  {a.needs_human_review ? "Needs human review" : "Covered by guidelines"}
-                </span>
-              </header>
-              <p>{a.assessment}</p>
-              {a.related_guidelines.length > 0 && (
-                <ul className="guidelines">
-                  {a.related_guidelines.map((g) => (
-                    <li key={g.chunk_id}>
-                      <span className="source-title">{g.title}</span> <span className="muted">p. {g.page}{g.heading ? ` · ${g.heading}` : ""}</span>
-                      <blockquote className="source-quote">“{g.quote}”</blockquote>
-                    </li>
-                  ))}
-                </ul>
-              )}
-              <p className="fineprint">Searches: {a.searches.join(" → ")} · {a.steps_used} step(s)</p>
-            </article>
-          ))}
-        </section>
-      )}
+      {risk && <RiskResults result={risk} />}
     </div>
   );
 }

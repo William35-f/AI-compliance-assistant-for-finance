@@ -1,0 +1,281 @@
+{
+  "timestamp": "20261112T151440Z",
+  "model": "gemini-3.5-flash-lite",
+  "accuracy": {
+    "revenue": 1.0,
+    "revenue_page": 1.0,
+    "verified_numbers": 1.0,
+    "net_profit": 1.0,
+    "net_profit_page": 1.0,
+    "total_debt": 1.0,
+    "total_debt_page": 1.0,
+    "company": 0.8,
+    "fiscal_year": 1.0,
+    "currency": 1.0,
+    "risks_found": 1.0
+  },
+  "reports": [
+    {
+      "source_id": "ar_dbs_fy2025",
+      "company": {
+        "predicted": "DBS Group Holdings Ltd",
+        "truth": "DBS Group Holdings Ltd"
+      },
+      "fiscal_year": {
+        "predicted": "FY2025",
+        "truth": "FY2025"
+      },
+      "currency": {
+        "predicted": "SGD",
+        "truth": "SGD"
+      },
+      "warnings": [],
+      "latency_ms": 4928,
+      "cost_usd": 0.00145,
+      "key_risks": [
+        "Credit risk",
+        "Market risk",
+        "Liquidity risk",
+        "Operational risk",
+        "Technology risk"
+      ],
+      "revenue": {
+        "predicted": 22900000000.0,
+        "truth": 22900000000,
+        "page": 58,
+        "truth_pages": [
+          58
+        ],
+        "verified": true
+      },
+      "net_profit": {
+        "predicted": 10933000000.0,
+        "truth": 10933000000,
+        "page": 58,
+        "truth_pages": [
+          58
+        ],
+        "verified": true
+      },
+      "total_debt": {
+        "predicted": 79551000000.0,
+        "truth": 79551000000,
+        "page": 59,
+        "truth_pages": [
+          59
+        ],
+        "verified": true
+      }
+    },
+    {
+      "source_id": "ar_ocbc_fy2025",
+      "company": {
+        "predicted": "Overseas-Chinese Banking Corporation Limited",
+        "truth": "Oversea-Chinese Banking Corporation Limited"
+      },
+      "fiscal_year": {
+        "predicted": "FY2025",
+        "truth": "FY2025"
+      },
+      "currency": {
+        "predicted": "SGD",
+        "truth": "SGD"
+      },
+      "warnings": [],
+      "latency_ms": 3723,
+      "cost_usd": 0.00113,
+      "key_risks": [
+        "Credit Risk",
+        "Market Risk",
+        "Liquidity Risk",
+        "Operational Risk",
+        "Information Security and Digital Risk"
+      ],
+      "revenue": {
+        "predicted": 14614000000.0,
+        "truth": 14614000000,
+        "page": 125,
+        "truth_pages": [
+          125,
+          98
+        ],
+        "verified": true
+      },
+      "net_profit": {
+        "predicted": 7422000000.0,
+        "truth": 7422000000,
+        "page": 125,
+        "truth_pages": [
+          125,
+          98
+        ],
+        "verified": true
+      },
+      "total_debt": {
+        "predicted": 30482000000.0,
+        "truth": 30482000000,
+        "page": 127,
+        "truth_pages": [
+          127
+        ],
+        "verified": true
+      }
+    },
+    {
+      "source_id": "ar_singtel_fy2026",
+      "company": {
+        "predicted": "Singapore Telecommunications Limited",
+        "truth": "Singapore Telecommunications Limited"
+      },
+      "fiscal_year": {
+        "predicted": "FY2026",
+        "truth": "FY2026"
+      },
+      "currency": {
+        "predicted": "SGD",
+        "truth": "SGD"
+      },
+      "warnings": [],
+      "latency_ms": 83411,
+      "cost_usd": 0.000876,
+      "key_risks": [
+        "Data governance",
+        "Cybersecurity",
+        "Geopolitical uncertainties"
+      ],
+      "revenue": {
+        "predicted": 14260600000.0,
+        "truth": 14260600000,
+        "page": 144,
+        "truth_pages": [
+          144,
+          114
+        ],
+        "verified": true
+      },
+      "net_profit": {
+        "predicted": 5606100000.0,
+        "truth": 5606100000,
+        "page": 144,
+        "truth_pages": [
+          144,
+          114
+        ],
+        "verified": true
+      },
+      "total_debt": {
+        "predicted": 11678700000.0,
+        "truth": 11678700000,
+        "page": 146,
+        "truth_pages": [
+          146,
+          147
+        ],
+        "verified": true
+      }
+    },
+    {
+      "source_id": "ar_keppel_fy2025",
+      "company": {
+        "predicted": "Keppel Ltd.",
+        "truth": "Keppel Ltd."
+      },
+      "fiscal_year": {
+        "predicted": "FY2025",
+        "truth": "FY2025"
+      },
+      "currency": {
+        "predicted": "SGD",
+        "truth": "SGD"
+      },
+      "warnings": [],
+      "latency_ms": 7291,
+      "cost_usd": 0.001111,
+      "key_risks": [
+        "Financial and operational risks",
+        "Compliance, operational and IT risks",
+        "Cybersecurity risks"
+      ],
+      "revenue": {
+        "predicted": 5982987000.0,
+        "truth": 5982987000,
+        "page": 121,
+        "truth_pages": [
+          121,
+          231
+        ],
+        "verified": true
+      },
+      "net_profit": {
+        "predicted": 788508000.0,
+        "truth": 788508000,
+        "page": 121,
+        "truth_pages": [
+          121
+        ],
+        "verified": true
+      },
+      "total_debt": {
+        "predicted": 11315503000.0,
+        "truth": 11315503000,
+        "page": 120,
+        "truth_pages": [
+          120
+        ],
+        "verified": true
+      }
+    },
+    {
+      "source_id": "ar_shengsiong_fy2025",
+      "company": {
+        "predicted": "Sheng Siong Group Ltd.",
+        "truth": "Sheng Siong Group Ltd."
+      },
+      "fiscal_year": {
+        "predicted": "FY2025",
+        "truth": "FY2025"
+      },
+      "currency": {
+        "predicted": "SGD",
+        "truth": "SGD"
+      },
+      "warnings": [],
+      "latency_ms": 92573,
+      "cost_usd": 0.000777,
+      "key_risks": [
+        "Product risk",
+        "Customer Safety risk",
+        "Theft and misappropriation risk",
+        "Liquidity risk",
+        "Foreign currency risk"
+      ],
+      "revenue": {
+        "predicted": 1569963000.0,
+        "truth": 1569963000,
+        "page": 76,
+        "truth_pages": [
+          76
+        ],
+        "verified": true
+      },
+      "net_profit": {
+        "predicted": 149455000.0,
+        "truth": 149455000,
+        "page": 76,
+        "truth_pages": [
+          76
+        ],
+        "verified": true
+      },
+      "total_debt": {
+        "predicted": 0.0,
+        "truth": 0,
+        "page": null,
+        "truth_pages": [
+          75
+        ],
+        "verified": true
+      }
+    }
+  ]
+}

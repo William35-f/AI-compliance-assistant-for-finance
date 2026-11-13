@@ -4,11 +4,11 @@
 
 - [x] **Phase 0: Setup** (2026-11-12)
 - [x] **Phase 1: Ingestion pipeline** (2026-11-12)
-- [~] Phase 2: Q&A with citations (built and tested with a fake LLM; live Gemini check waits for the API key)
-- [~] Phase 3: Evaluation harness (built; 90 questions; retrieval baseline measured; LLM-judged baseline waits for the API key)
-- [x] **Phase 4: Retrieval experiments** (retrieval metrics done; LLM-judged comparison waits for the key)
-- [~] Phase 5: Report extraction and risk agent (built and tested; accuracy run waits for the key)
-- [~] Phase 6: Frontend, CI and deployment (built; deployment needs the user's Render/Neon accounts)
+- [x] **Phase 2: Q&A with citations** (live on Gemini, 2026-11-12)
+- [x] **Phase 3: Evaluation harness** (first LLM-judged run: correctness 0.900, citation accuracy 0.993)
+- [x] **Phase 4: Retrieval experiments** (retrieval metrics done; LLM-judged baseline comparison still to run)
+- [x] **Phase 5: Report extraction and risk agent** (extraction 15/15 numbers correct)
+- [~] Phase 6: Frontend, CI and deployment (UI redesigned; deployment needs the user's Render/Neon accounts)
 
 ---
 
@@ -305,6 +305,124 @@ MRR 0.669 to 0.819; paraphrased set 0.600 to 0.800.
 | A 40 MB limit doesn't bound work: a small PDF can hold thousands of pages. | 600-page cap checked before parsing; returns 413 (tested). |
 | `pip install` in the Docker build failed on a PyPI read timeout. | `--timeout 120 --retries 5`. |
 | The UI could not be checked visually in this environment (no browser tool). | Verified by type-check, production build and HTTP smoke tests; visual check is on the to-do list for the user. |
+
+---
+
+## Live Gemini runs (2026-11-12, after the API key arrived)
+
+**Results (measured)**
+- Live tests: 2/2 pass. The prompt injection placed ON the income-statement page did not change
+  the extracted numbers.
+- Q&A eval, chosen config (heading index + hybrid, k = 5), run `20261112T154112Z`:
+
+| Metric | Value |
+|---|---|
+| hit@5 / MRR | 0.950 / 0.819 |
+| Answer correctness (LLM judge) | 0.900 (factual 0.917, multi-hop 0.750) |
+| Citation accuracy | 0.993 |
+| Quotes not verbatim (shown as closest match) | 2.0% |
+| Out-of-scope refusal | 1.000 (10/10) |
+| False refusals (in-scope) | 0.05 (cyb-04, ai-01, fd-02, mh-05) |
+| Latency p50 / p95 | 6.2 s / 83 s (includes free-tier 503 retry waits) |
+| Estimated cost per question | $0.0003 at paid-tier prices |
+
+- Extraction eval: revenue, net profit, total debt 15/15 correct, right page and verified;
+  fiscal year, currency, key risks 5/5; company name 4/5 (model wrote "Overseas-Chinese" for
+  OCBC; the legal name is "Oversea-Chinese").
+- Source panel: replaying all 80 in-scope answers from the LLM cache (0 Gemini calls), the page
+  view located and highlighted the quote for **147 of 147** citations.
+
+**Problems found and fixes**
+
+| Problem (with evidence) | Fix |
+|---|---|
+| `gemini-2.5-flash-lite` returned 404: "no longer available to new users". | Default answer and judge model changed to `gemini-3.5-flash-lite` (free tier). |
+| The first eval run died on a single 503 ("model is experiencing high demand") after 4 retries (about 30 s of backoff). | New `GEMINI_MAX_RETRIES` setting: the API keeps 4 (users shouldn't wait minutes), eval runs use 8 (backoff capped at 60 s). |
+| The second run died on `getaddrinfo failed` (local network drop): only Gemini's error responses were retried, not connection errors. | Connection errors and timeouts from `httpx`/`httpx2` (google-genai uses either) are retried too (tested). |
+| The extraction result file stored only pass/fail for company, year and currency, so a miss couldn't be inspected. | Predicted and true values are saved for these fields. |
+
+Nothing was lost to the crashes: every completed call was in the Postgres LLM cache, so each
+re-run resumed for free.
+
+**Decisions**
+
+| Decision | Why |
+|---|---|
+| Latency reported with a note rather than re-measured | The free tier's 503 waits dominate p95; the honest fix is a paid key or a quieter hour, not hiding the number. |
+| Paid-tier price settings left unchanged for now | They feed only the cost *estimate*; they should be updated to the 3.5 Flash-Lite list price when checked. |
+
+---
+
+## UI redesign: "every answer sits next to its evidence" (2026-11-12)
+
+Built to the user's design brief: answer on the left (question as heading, numbered claims with
+citation chips, not-legal-advice line, a strip with sources cited / response time / cost, source
+list); on the right the cited page in Newsreader with the document's own paragraph numbers in
+the margin and the cited paragraph highlighted. Palette and fonts (Public Sans, Newsreader) as
+specified; no gradients, shadows or emoji. Columns stack below 960 px.
+
+**Built**
+- `page_view.py` + `GET /sources/{id}/pages/{page}?quote=&through=`: rebuilds a page from the
+  same parser output that ingestion chunks, splits labels ("4.1.1", "3.6.", "(g)"), flags the
+  paragraph holding the quote (exact match, then a quote spanning paragraphs, then >= 60% word
+  overlap) and, for citations spanning pages, returns the page where the quote actually is.
+  Parsed documents are cached (a 57-page guideline parses in 0.16 s).
+- Panel: previous/next page for context, "Back to page N", "Open PDF" at that page.
+- Dockerfile downloads the regulation PDFs as well as the reports, so the panel works deployed.
+- 16 new tests (145 non-live in total).
+
+**Checked**
+- Screenshots with the local Chrome (Playwright in a throwaway environment, not a project
+  dependency): desktop 1440 px, mobile 390 px (no horizontal scroll), keyboard focus, Extract
+  and Stats pages; no console errors.
+- Contrast measured: all text pairs >= 5.1:1. The brief's border colour (1.3:1 on paper) is used
+  for dividers only; input borders use #7D878F (3.4:1) to meet the 3:1 rule for controls.
+
+**Decisions**
+
+| Decision | Why |
+|---|---|
+| The whole cited paragraph is highlighted, not just the quoted words | As the brief specifies; the quote is always visible in the source list too. |
+| Dark mode removed | The brief defines a light palette only; a dark variant would be invented, not specified. (Superseded: spec v2 defines a dark theme, see below.) |
+| One question shown at a time, earlier questions listed below | The answer is the page's heading and the panel belongs to it; a chat log would split the reader's attention. |
+
+### UI spec v2: summary heading, Risk check page, dark theme (2026-11-13)
+
+**Built**
+- Ask page heading is now a one-line summary of the answer, with the question above it in small
+  type. The model writes the summary after its claims; `qa.checked_summary` rejects it (and the
+  heading falls back to the question) if it is over 160 characters or contains a number that
+  isn't in the cited claims. The summary is the only uncited sentence on the page, so it may only
+  restate, never add.
+- Stat strip shows "Sources cited: 3 of 5" (distinct passages cited of passages retrieved) and
+  "Cost per query"; the sources list shows title and page/section only (the quote is in the panel).
+- Source panel: page and section under the title, "Open the PDF", and the citation number beside
+  the paragraph number of the highlighted paragraph.
+- New Risk check page: check the top 3 risks of an annual report, or one risk you describe.
+  Risk results are a shared component, also used on the Extract page.
+- Top bar: "Searching 10 MAS guidelines and 5 annual reports" (counted from `/sources`), and a
+  dark theme switch (remembered in the browser; applied before first paint).
+- Dark theme per the spec: black answer side, #1E2024 evidence panel, #1A69FF accent, Prompt Light
+  headings and stats, Work Sans UI, the cited paragraph on a #16305E block, sources as underlined
+  rows with an arrow, and the page navigation as a bottom bar (also used on phones in light).
+- Citation chips are round; every control has a 44 px target (chips via an invisible hit area).
+
+**Checked**
+- 152 backend tests pass (7 new for the summary check), ruff clean, typecheck and build ok.
+- Screenshots in both themes at 1440 px and 390 px (no horizontal scroll), Risk check and Stats
+  pages; no console errors. Fixed from screenshots: paragraph numbers sat at the bottom of their
+  paragraph on phones; the stat strip wrapped unevenly.
+- Contrast measured (dark): white/black 21, secondary/panel 6.8, link text/panel 6.2, white on
+  blue 4.7, white on the cited block 13.0, risk/panel 6.5.
+
+**Decisions**
+
+| Decision | Why |
+|---|---|
+| #1A69FF is used for fills and lines only; dark-theme link text is #6E9DFF | #1A69FF text is 3.5:1 on the #1E2024 panel, below the 4.5:1 rule. |
+| Risk red is #FF7A8A in dark | #A3263A is 2.9:1 on black. |
+| Summary checked for numbers only | Numbers (time limits, dates, percentages) are the costly errors; wording is restated from claims shown directly below it. |
+| Eval results not re-run after the summary change | The summary adds an output field after the claims; claims and citations are produced and checked as before. A re-run (about 170 free-tier calls) would confirm it. |
 
 ---
 

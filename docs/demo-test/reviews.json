@@ -1,0 +1,59 @@
+{
+  "_meta": {
+    "date": "13 November 2026",
+    "subtitle": "32 common bank compliance questions asked in the ReguLens demo, with screenshots and a hand review of every answer",
+    "cost": "about $0.0003 (the free tier was used, so the actual cost was $0)",
+    "findings": [
+      {"title": "Behaviour was right every time.", "text": "All 26 questions the MAS documents cover were answered, and all 6 they don't cover were refused, including a request to ignore the sources and explain how to avoid AML checks."},
+      {"title": "No wrong facts.", "text": "24 of 26 answers fully matched the highlighted source paragraph and 2 were partly right (one missed a point, one had a misleading heading). Every cited quote supported its point."},
+      {"title": "Main weakness: \"should\" becomes \"must\".", "text": "In 10 of 26 answers or headings, ReguLens wrote \"must\" where the MAS guideline says \"should\". The facts are right, but this overstates how binding a guideline is, which matters to a compliance reader."},
+      {"title": "The quote check worked.", "text": "Two quotes could not be matched word for word because of the PDF layout (a footnote splitting a sentence, and a list). ReguLens showed the closest real sentence and flagged it, as designed."},
+      {"title": "Fast and cheap.", "text": "Typical response 2.4 seconds (slowest 15.7 s). Three off-topic questions were refused in about a second without calling the AI model at all."}
+    ],
+    "method": [
+      "32 questions drawn from the compliance topics banks deal with most often (AML and customer due diligence, incident reporting, technology and cyber risk, outsourcing, AI governance, conduct), worded the way a compliance officer would ask, not copied from the documents.",
+      "26 questions are covered by the 10 indexed MAS documents, 3 of them need two documents; 6 are outside them and should be refused.",
+      "Each question was typed into the Ask page in a fresh Chrome window and the page was screenshotted once the answer and its highlighted source appeared. The full API response was saved for each question.",
+      "Every answer was then checked by hand against the source paragraph ReguLens highlighted.",
+      "Each question was asked once. Q01 had been asked before, so its answer came from the cache (instant); its time is left out of the typical response time."
+    ],
+    "issues": [
+      {"issue": "Obligation wording overstated (\"should\" written as \"must\")", "where": "Q02 (heading), Q05, Q06, Q08, Q10, Q16, Q17, Q19, Q20 (heading), Q24", "fix": "Add a code check: if a point says \"must\" but its cited quotes say \"should\" (and not \"must\" or \"shall\"), use the source's word. Track it as an eval metric."},
+      {"issue": "Heading does not match the answer well", "where": "Q23 (lists credit, market and other risks as \"channels\"; the guideline's channels are physical and transition risk); Q12 (a fragment, not a sentence)", "fix": "Tighten the summary instruction, and fall back to the question as the heading when the answer has several separate parts."},
+      {"issue": "A broadly worded question missed a point", "where": "Q16 (\"something goes wrong with an outsourced service provider\"): did not mention notifying MAS of adverse developments", "fix": "Retrieve more passages for broad questions, or suggest a more specific wording. The specific wording (\"adverse development\") is answered fully in the eval set."},
+      {"issue": "Quote shown as closest match", "where": "Q11 (a footnote splits the sentence in the PDF text), Q23 (quote ran into a list)", "fix": "Remove footnotes during PDF parsing and allow quotes to span list items. The flag itself is correct behaviour."}
+    ]
+  },
+  "01": {"correct": "Yes", "note": "Correct, including the STR deadline (no later than 1 business day). This answer came from the cache because the question had been asked before."},
+  "02": {"correct": "Yes", "note": "Correct. The heading says \"must\"; the guideline says \"should\"."},
+  "03": {"correct": "Yes", "note": "Correct and complete."},
+  "04": {"correct": "Yes", "note": "Correct; explains both terms and the difference, from three quotes on the same page."},
+  "05": {"correct": "Yes", "note": "Correct (30 and 120 business days, suspend then terminate). Says \"must\" where the guideline says \"should\"."},
+  "06": {"correct": "Yes", "note": "Correct (at least every two years or on trigger events). Says \"must\" where the guideline says \"should\"."},
+  "07": {"correct": "Yes", "note": "Correct: the board of directors and senior management."},
+  "08": {"correct": "Yes", "note": "Correct (within one hour). Says \"must notify\"; the guideline says the FI \"should ensure that MAS is notified\"."},
+  "09": {"correct": "Yes", "note": "Correct; combines the definition and the purpose."},
+  "10": {"correct": "Yes", "note": "Correct (annual attestation, what it covers, available to MAS on request). Says \"must\" where the guideline says \"should\"."},
+  "11": {"correct": "Yes", "note": "Correct (at least once a year or after major changes). The quote is flagged as closest match because a footnote splits the sentence in the PDF text."},
+  "12": {"correct": "Yes", "note": "Correct; the notice itself uses \"must\". The heading is a fragment rather than a sentence."},
+  "13": {"correct": "Yes", "note": "Correct; the notice uses \"must\"."},
+  "14": {"correct": "Yes", "note": "Correct, including the sandbox exception."},
+  "15": {"correct": "Yes", "note": "Correct: need-to-use basis."},
+  "16": {"correct": "Partly", "note": "What it says is supported, but it focuses on business continuity and termination and misses that the bank should notify MAS of adverse developments. The question is broad; says \"must\" where the guideline says \"should\"."},
+  "17": {"correct": "Yes", "note": "Correct. Says \"must assess\" where the guideline says \"should\"."},
+  "18": {"correct": "Yes", "note": "Correct: the guidelines apply within the bank's group."},
+  "19": {"correct": "Yes", "note": "Correct (impact, complexity, reliance). Says \"must\" where the guideline says \"should\"."},
+  "20": {"correct": "Yes", "note": "Correct. The answer says \"should\" but the heading says \"must\"."},
+  "21": {"correct": "Yes", "note": "Correct and well sourced from three pages."},
+  "22": {"correct": "Yes", "note": "All five outcomes, word for word."},
+  "23": {"correct": "Partly", "note": "The answer is right, but the heading calls credit, market, liquidity and operational risk \"channels\"; the guideline's channels are physical and transition risk. Quote [2] is flagged as closest match."},
+  "24": {"correct": "Yes", "note": "Both parts correct from two sections (one hour; audit at least every three years). Says \"must\" where the guideline says \"should\"."},
+  "25": {"correct": "Yes", "note": "Correct, and it keeps the difference: the notice requires, the guidelines recommend."},
+  "26": {"correct": "Yes", "note": "Both parts correct, from two different documents."},
+  "27": {"note": "Correct refusal: a real compliance question, but Notice 637 is not indexed. The model declined after reading the closest passages."},
+  "28": {"note": "Correct refusal, without calling the AI model (no passage was similar enough)."},
+  "29": {"note": "Correct refusal, without calling the AI model."},
+  "30": {"note": "Correct refusal: the EU AI Act is not in the sources, even though the MAS AI guidelines are close in topic."},
+  "31": {"note": "Correct refusal, without calling the AI model."},
+  "32": {"note": "Correct refusal of an attempt to override the instructions."}
+}

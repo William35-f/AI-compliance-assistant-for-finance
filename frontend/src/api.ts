@@ -15,6 +15,7 @@ export interface Citation {
 
 export interface AskResponse {
   answer: string;
+  summary: string | null; // one-line heading, checked against the claims; null if it failed
   citations: Citation[];
   refused: boolean;
   refusal_reason: string | null;
@@ -124,6 +125,24 @@ export interface SourceInfo {
   downloaded: boolean;
 }
 
+export interface SourceParagraph {
+  label: string | null; // the document's own paragraph number, e.g. "4.1.1" or "(g)"
+  heading: string | null;
+  text: string;
+  cited: boolean;
+}
+
+export interface SourcePage {
+  source_id: string;
+  title: string;
+  publisher: string;
+  url: string;
+  page: number;
+  page_count: number;
+  paragraphs: SourceParagraph[];
+  cited_found: boolean;
+}
+
 /** An API error with the server's explanation (FastAPI puts it in `detail`). */
 export class ApiError extends Error {
   constructor(
@@ -178,6 +197,20 @@ export const api = {
 
   riskCheck: (risks: KeyRisk[], maxRisks = 3) =>
     request<RiskCheckResult>("/risk-check", json({ risks, max_risks: maxRisks })),
+
+  /** Extract the report's risks on the server, then check the first `maxRisks`. */
+  riskCheckReport: (sourceId: string, maxRisks = 3) =>
+    request<RiskCheckResult>("/risk-check", json({ source_id: sourceId, max_risks: maxRisks })),
+
+  sourcePage(sourceId: string, page: number, quote?: string, through?: number) {
+    const params = new URLSearchParams();
+    if (quote) params.set("quote", quote.slice(0, 2000));
+    if (through && through > page) params.set("through", String(through));
+    const query = params.toString();
+    return request<SourcePage>(
+      `/sources/${encodeURIComponent(sourceId)}/pages/${page}${query ? `?${query}` : ""}`,
+    );
+  },
 
   stats: () => request<StatsResponse>("/stats"),
 

@@ -48,11 +48,15 @@ class Settings(BaseSettings):
 
     # --- LLM: Google Gemini ---
     gemini_api_key: SecretStr | None = None
-    gemini_model: str = "gemini-2.5-flash-lite"  # answers questions
-    gemini_judge_model: str = "gemini-2.5-flash-lite"  # grades answers in evals
+    gemini_model: str = "gemini-3.5-flash-lite"  # answers questions
+    gemini_judge_model: str = "gemini-3.5-flash-lite"  # grades answers in evals
     # Client-side pacing. Free-tier limits are per model and change often;
     # check yours at https://aistudio.google.com and keep this at or below it.
     gemini_requests_per_minute: float = 10
+    # Retries on 429/5xx with backoff 2, 4, 8, ... capped at 60 s. Keep it low for the
+    # web API (users shouldn't wait minutes); raise it for long eval runs, e.g.
+    # GEMINI_MAX_RETRIES=8 rides out "model overloaded" (503) spikes of a few minutes.
+    gemini_max_retries: int = 4
     # Gemini 3 models accept "minimal" | "low" | "medium" | "high"; None = model default.
     gemini_thinking_level: str | None = None
     # Paid-tier list prices (USD per 1M tokens) used to ESTIMATE cost per query.

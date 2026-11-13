@@ -58,6 +58,9 @@ def main() -> int:
             return 1
         row = {
             "source_id": sid,
+            "company": {"predicted": result.company, "truth": truth["company"]},
+            "fiscal_year": {"predicted": result.fiscal_year, "truth": truth["fiscal_year"]},
+            "currency": {"predicted": result.currency, "truth": truth["currency"]},
             "warnings": result.warnings,
             "latency_ms": result.latency_ms,
             "cost_usd": result.cost_usd,

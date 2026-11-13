@@ -79,6 +79,22 @@ class _Pacer:
 _pacers: dict[str, _Pacer] = {}  # one per model: free-tier limits are per model
 
 
+def _network_errors() -> tuple[type[Exception], ...]:
+    """Connection drops and timeouts (DNS failure, reset, read timeout) worth retrying.
+
+    google-genai sends requests with either httpx or its fork httpx2, whose
+    exception classes are unrelated, so both are caught when installed.
+    """
+    found: list[type[Exception]] = []
+    for name in ("httpx", "httpx2"):
+        try:
+            module = __import__(name)
+        except ImportError:
+            continue
+        found.append(module.TransportError)
+    return tuple(found)
+
+
 def _retry_delay_seconds(error: Exception, attempt: int) -> float:
     """Use the server's suggested retry delay if present, else exponential backoff."""
     match = re.search(r"retryDelay['\"]?\s*:\s*['\"]?(\d+(?:\.\d+)?)s", str(error))
@@ -118,6 +134,7 @@ class GeminiClient:
                 else None
             ),
         )
+        network_errors = _network_errors()
         for attempt in range(self._max_retries + 1):
             self._pacer.wait()
             started = time.perf_counter()
@@ -138,6 +155,17 @@ class GeminiClient:
                 delay = _retry_delay_seconds(exc, attempt)
                 logger.warning(
                     "Gemini %s, retrying in %.0fs (attempt %d)", code, delay, attempt + 1
+                )
+                time.sleep(delay)
+            except network_errors as exc:
+                if attempt == self._max_retries:
+                    raise LLMError(f"Gemini unreachable: {exc!r}") from exc
+                delay = _retry_delay_seconds(exc, attempt)
+                logger.warning(
+                    "Network error (%s), retrying in %.0fs (attempt %d)",
+                    type(exc).__name__,
+                    delay,
+                    attempt + 1,
                 )
                 time.sleep(delay)
         latency_ms = int((time.perf_counter() - started) * 1000)
@@ -245,6 +273,7 @@ def make_llm(model: str | None = None, cache: bool = True) -> LLMClient:
         model=model or settings.gemini_model,
         api_key=settings.gemini_api_key.get_secret_value(),
         requests_per_minute=settings.gemini_requests_per_minute,
+        max_retries=settings.gemini_max_retries,
         thinking_level=settings.gemini_thinking_level,
     )
     return CachedLLM(client) if cache else client

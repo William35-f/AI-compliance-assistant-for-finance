@@ -33,8 +33,8 @@ function EvalTable({ title, snapshot }: { title: string; snapshot: EvalSnapshot 
       ) : (
         <>
           <p className="muted">
-            Run <code>{snapshot.run}</code> · index {String(snapshot.config.index)} · {String(snapshot.config.mode)} search
-            · {String(snapshot.metrics.questions ?? "?")} questions
+            {String(snapshot.metrics.questions ?? "?")} questions, {String(snapshot.config.mode)} search on
+            the {String(snapshot.config.index)} index. Run <code>{snapshot.run}</code>.
           </p>
           <div className="table-wrap">
             <table className="figures">
@@ -60,21 +60,21 @@ export default function StatsPage() {
     api.stats().then(setStats).catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load"));
   }, []);
 
-  if (error) return <div className="answer error">{error}</div>;
-  if (!stats) return <p className="muted">Loading…</p>;
+  if (error) return <p className="error-box" role="alert">{error}</p>;
+  if (!stats) return <p className="muted">Loading stats…</p>;
 
   const u = stats.usage;
   return (
     <div className="stack">
       <div className="page-intro">
-        <h1>Stats</h1>
+        <h1>Stats and evals</h1>
         <p>Live usage of this deployment (evaluation traffic excluded) and the latest measured evaluation scores.</p>
       </div>
       <div className="tiles">
         <Tile label="Questions answered" value={u.queries.toLocaleString()} />
-        <Tile label="Latency p50" value={formatMs(u.latency_p50_ms)} />
-        <Tile label="Latency p95" value={formatMs(u.latency_p95_ms)} />
-        <Tile label="Avg est. cost" value={formatUsd(u.avg_cost_usd)} hint="at paid-tier list price" />
+        <Tile label="Typical response time" value={formatMs(u.latency_p50_ms)} hint="median (p50)" />
+        <Tile label="Slow response time" value={formatMs(u.latency_p95_ms)} hint="95th percentile" />
+        <Tile label="Average estimated cost" value={formatUsd(u.avg_cost_usd)} hint="at paid-tier prices" />
         <Tile label="Refused" value={u.queries ? formatRate(u.refused / u.queries) : "–"} hint="no supporting source" />
         <Tile label="Cache hits" value={u.queries ? formatRate(u.cached / u.queries) : "–"} />
       </div>
@@ -83,7 +83,7 @@ export default function StatsPage() {
         <EvalTable title="Latest retrieval evaluation" snapshot={stats.latest_retrieval_eval} />
       </div>
       <p className="fineprint">
-        Rate limits: {Object.entries(stats.rate_limits).map(([k, v]) => `${k} ${v}`).join(" · ")}
+        Rate limits: {Object.entries(stats.rate_limits).map(([k, v]) => `${k} ${v}`).join(", ")}.
       </p>
     </div>
   );

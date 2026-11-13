@@ -51,3 +51,33 @@ def test_cache_returns_stored_response_without_calling_model() -> None:
     finally:
         with db.connect() as conn:
             conn.execute("DELETE FROM llm_cache WHERE model = %s", (fake.model,))
+
+
+def test_gemini_client_retries_network_errors(monkeypatch) -> None:
+    """A dropped connection (e.g. DNS failure) is retried instead of ending an eval run."""
+    from types import SimpleNamespace
+
+    from regulens import llm
+
+    error_cls = llm._network_errors()[0]
+    calls = {"n": 0}
+
+    def flaky_generate_content(**_kwargs):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise error_cls("getaddrinfo failed")
+        return SimpleNamespace(text='{"value": "ok"}', usage_metadata=None)
+
+    client = llm.GeminiClient.__new__(llm.GeminiClient)
+    client.model = "test-model"
+    client._max_retries = 2
+    client._thinking_level = None
+    client._pacer = _Pacer(requests_per_minute=0)
+    client._client = SimpleNamespace(
+        models=SimpleNamespace(generate_content=flaky_generate_content)
+    )
+    monkeypatch.setattr(llm.time, "sleep", lambda _s: None)
+
+    parsed, _usage = client.generate_json(system="s", prompt="p", schema=Echo)
+    assert parsed.value == "ok"
+    assert calls["n"] == 2

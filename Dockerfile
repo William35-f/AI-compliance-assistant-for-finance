@@ -32,11 +32,12 @@ COPY --from=frontend /app/frontend/dist frontend/dist
 # Bake the embedding model into the image: no download on cold start.
 RUN python -c "from regulens.embeddings import get_embedder; get_embedder()"
 
-# Annual reports for /extract by source_id. Public URLs; a failed download only
-# hides that report in the UI (uploads still work), so it must not break the build.
+# Source PDFs: annual reports for /extract, regulations for the source panel on Ask.
+# Public URLs; a failed download only hides that document in the UI (uploads still
+# work, and answers still carry their quotes), so it must not break the build.
 ARG DOWNLOAD_REPORTS=true
 RUN if [ "$DOWNLOAD_REPORTS" = "true" ]; then \
-      python scripts/download_sources.py --doc-type annual_report || echo "report download skipped"; \
+      python scripts/download_sources.py || echo "source download skipped"; \
     fi
 
 # Run as a non-root user.

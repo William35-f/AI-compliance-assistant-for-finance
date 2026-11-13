@@ -7,7 +7,8 @@ revenue, net profit, total debt and key risk disclosures from SGX-listed compani
 converting units and verifying each number on the cited financial-statement page. A small agent
 then links each disclosed risk to the relevant MAS guideline sections and flags possible gaps for
 a human to review. Retrieval quality was improved with measured, one-change-at-a-time experiments
-(hit@5 **0.80 → 0.95** on 80 questions).
+(hit@5 **0.80 → 0.95** on 80 questions). **v1.0.0:** answer correctness **0.89**, citation accuracy
+**0.99**, every out-of-scope question refused, median answer in 6 s.
 
 **Live demo:** _not deployed yet_ (see [DEPLOY.md](DEPLOY.md)) · **Build log and decisions:** [PROGRESS.md](PROGRESS.md)
 
@@ -54,14 +55,21 @@ Only numbers produced by the scripts appear here (full log: [eval/results/summar
 | Config | hit@5 | MRR | Answer correctness | Citation accuracy | Out-of-scope refusal | p50 / p95 latency |
 |---|---|---|---|---|---|---|
 | Baseline: vector, k = 5 | 0.800 | 0.669 | not run yet | – | – | – |
-| **Chosen: heading embedding + hybrid, k = 5** | **0.950** | **0.819** | **0.900** | **0.993** | **1.000** | 6.2 s / 83 s* |
+| **Chosen: heading embedding + hybrid, k = 5 (v1.0.0)** | **0.950** | **0.819** | **0.887** | **0.987** | **1.000** | 6.3 s / 7.2 s |
 
-Chosen config in more detail (run `20261112T154112Z`, `gemini-3.5-flash-lite` answering and judging):
-factual 0.917, multi-hop 0.750; false refusals 4 of 80 in-scope questions (0.05); 2% of quotes
+v1.0.0 in more detail (run `20261113T081952Z`, `gemini-3.5-flash-lite` answering and judging):
+factual 0.896, multi-hop 0.813; false refusals 3 of 80 in-scope questions (0.04); 3% of quotes
 not verbatim (shown as "closest match"); estimated cost $0.0003 per question at paid-tier prices.
+Answer correctness is 71 of 80 with a 95% interval of about ±0.06, so it matches the previous full
+run (0.900, run `20261112T154112Z`) within noise: 8 questions moved by half a point, 5 down and 3
+up, mostly answers that kept the main point but dropped a secondary detail.
 
-\* Latency was measured on the free tier during a period of "model overloaded" (503) errors and
-includes retry waits; the p95 mostly measures Gemini's free-tier queue, not ReguLens.
+What changed in v1 and how it was checked: answers now carry a one-line summary heading (its
+numbers must appear in the cited claims), and "must" is rewritten to "should" when the cited
+source says "should", because MAS guidelines are expectations, not legal requirements. A
+[32-question demo test](docs/demo-test/TEST_LOG.md) in the real UI found that 10 of 26 answers
+had hardened "should" into "must"; in the v1 eval, "must" appears 22 times across the answers
+instead of 41.
 
 Extraction on the 5 annual reports (`eval/run_extraction_eval.py`): revenue, net profit and total
 debt **15 of 15 correct**, each on the right page and verified on it; fiscal year, currency and
@@ -155,7 +163,7 @@ uvicorn regulens.main:app --reload --port 8001   # docs at http://127.0.0.1:8001
 cd frontend; npm install; npm run dev        # http://localhost:5173
 
 # 7. Tests, lint, evals
-pytest backend                               # 152 tests; live Gemini tests run with -m live
+pytest backend                               # 160 tests; live Gemini tests run with -m live
 ruff check backend scripts eval
 python eval/run_eval.py --name my-run --retrieval-only   # free, no LLM calls
 python eval/run_eval.py --name my-run                    # full run, uses Gemini
@@ -209,7 +217,7 @@ Or run everything in one container: `docker build -t regulens .` then
 ## Repository layout
 
 ```
-backend/     FastAPI app (package `regulens`) and 154 tests
+backend/     FastAPI app (package `regulens`) and 162 tests
 frontend/    React + TypeScript app (Ask, Extract, Stats)
 eval/        questions, extraction truth, eval scripts and saved results
 data/        sources.csv (committed); raw/ PDFs (git-ignored, see scripts/download_sources.py)
@@ -225,7 +233,7 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 | 0. Setup (Docker, Postgres + pgvector, FastAPI `/health`, sources registry) | ✅ Done |
 | 1. Ingestion pipeline | ✅ Done |
 | 2. Q&A with citations | ✅ Done (live on Gemini) |
-| 3. Evaluation harness | ✅ Done; first LLM-judged run: correctness 0.90, citation accuracy 0.99 |
+| 3. Evaluation harness | ✅ Done; v1.0.0: correctness 0.89, citation accuracy 0.99, out-of-scope refusal 1.00 |
 | 4. Retrieval experiments | ✅ Done (retrieval metrics) |
 | 5. Report extraction and risk agent | ✅ Done; extraction 15/15 numbers correct |
 | 6. Frontend, CI and deployment | 🟡 Built; deployment needs your Render/Neon accounts |
@@ -253,7 +261,7 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 - [x] `eval/run_eval.py`: hit@k, MRR, judged correctness, citation accuracy, refusals, latency, cost
 - [x] `eval/judge_agreement.py` for checking the LLM judge against a human
 - [x] Retrieval baseline: hit@5 = 0.800, MRR = 0.669
-- [x] Full LLM-judged run of the chosen config (correctness 0.900)
+- [x] Full LLM-judged run of the chosen config (correctness 0.900), repeated for v1.0.0 (0.887, same within noise)
 - [ ] Judge-human agreement on 20 sampled answers
 
 ### Phase 4: Retrieval experiments
@@ -275,6 +283,9 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 ### Phase 6: Frontend, CI and deployment
 - [x] React app: Ask (clickable citations), Extract (table + risk check), Stats
 - [x] Ask redesign: answer beside the cited page, cited paragraph highlighted (located for 147/147 eval citations)
+- [x] Summary heading checked against the claims; "must" softened to "should" when the source says "should"
+- [x] Risk check page, light/dark themes, 44 px touch targets, WCAG AA contrast
+- [x] [32-question demo test](docs/demo-test/TEST_LOG.md) in the real UI: 32/32 answered or refused correctly
 - [x] Rate limiting; caches for repeated questions and query embeddings
 - [x] GitHub Actions: lint, tests with pgvector, frontend build, 20-question smoke eval gate
 - [x] Dockerfile (one image: API + frontend + embedding model) and [DEPLOY.md](DEPLOY.md)

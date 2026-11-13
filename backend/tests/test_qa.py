@@ -16,6 +16,7 @@ from regulens.qa import (
     assemble_answer,
     build_prompt,
     checked_summary,
+    match_obligation,
     verify_quote,
 )
 from regulens.retrieval import RetrievedChunk
@@ -97,6 +98,71 @@ def test_checked_summary_keeps_only_numbers_the_claims_support(
 def test_checked_summary_ignores_citation_markers() -> None:
     # "[2]" is a marker, not a fact, so it can't vouch for a "2" in the summary.
     assert checked_summary("Report within 2 days.", "Report within 14 days. [2]") is None
+
+
+@pytest.mark.parametrize(
+    ("claim", "quotes", "expected"),
+    [
+        # From the demo test (Q06): the guideline says "should", the model wrote "must".
+        (
+            "A bank must review its risk assessment at least once every two years.",
+            ["a bank should review its risk assessment at least once every two years"],
+            "A bank should review its risk assessment at least once every two years.",
+        ),
+        (
+            "Must not exceed 30 days.",
+            ["should not exceed 30 business days"],
+            "Should not exceed 30 days.",
+        ),
+        # A notice that really says "must" keeps it (demo test Q13).
+        (
+            "You must institute controls.",
+            ["the relevant entity must ensure that controls are instituted"],
+            "You must institute controls.",
+        ),
+        # "Obligations to" is binding too (demo test Q01: freezing sanctioned assets).
+        (
+            "Banks must freeze the assets.",
+            ["a bank is reminded of its obligations to freeze without delay", "should be reported"],
+            "Banks must freeze the assets.",
+        ),
+        # Mixed sources: if any cited text is binding, leave the wording alone.
+        ("Banks must do X.", ["banks should do X", "banks shall do X"], "Banks must do X."),
+        # Nothing to compare against: no change.
+        ("Banks must do X.", ["banks are expected to do X"], "Banks must do X."),
+        ("Banks should do X.", ["banks should do X"], "Banks should do X."),
+    ],
+)
+def test_match_obligation_keeps_the_sources_wording(
+    claim: str, quotes: list[str], expected: str
+) -> None:
+    assert match_obligation(claim, quotes) == expected
+
+
+def test_assemble_answer_softens_must_when_the_quote_says_should() -> None:
+    text, _ = assemble_answer(
+        LLMAnswer(
+            answerable=True,
+            claims=[
+                claim(
+                    "Banks must notify MAS within one hour.", ("C1", "notify MAS within one hour")
+                )
+            ],
+        ),
+        [chunk()],
+    )
+    # The quote alone doesn't contain "should", so the claim is left as the model wrote it.
+    assert text == "Banks must notify MAS within one hour. [1]"
+    text, _ = assemble_answer(
+        LLMAnswer(
+            answerable=True,
+            claims=[
+                claim("Banks must notify MAS.", ("C1", "A bank should notify MAS within one hour"))
+            ],
+        ),
+        [chunk()],
+    )
+    assert text == "Banks should notify MAS. [1]"
 
 
 def test_build_prompt_labels_passages_with_title_and_pages() -> None:

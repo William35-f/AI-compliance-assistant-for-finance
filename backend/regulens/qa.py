@@ -161,6 +161,26 @@ def verify_quote(quote: str, chunk_text: str) -> tuple[str, bool]:
     return best.strip(), False
 
 
+_MUST = re.compile(r"\b(must)\b", re.IGNORECASE)
+_STRONG = re.compile(
+    r"\b(must|shall|is required|are required|mandatory|obligations? to)\b", re.IGNORECASE
+)
+_SHOULD = re.compile(r"\bshould\b", re.IGNORECASE)
+
+
+def match_obligation(text: str, quotes: list[str]) -> str:
+    """Keep the source's obligation strength: "must" becomes "should" if the source says "should".
+
+    MAS guidelines mostly say "should" (an expectation); notices say "must" (a legal
+    requirement). Models tend to harden "should" into "must", which overstates how binding a
+    guideline is, so the word is taken from the cited quotes, not from the model.
+    """
+    source = " ".join(quotes)
+    if not _MUST.search(text) or _STRONG.search(source) or not _SHOULD.search(source):
+        return text
+    return _MUST.sub(lambda m: "Should" if m.group(1)[0].isupper() else "should", text)
+
+
 SUMMARY_MAX_CHARS = 160
 _NUMBER = re.compile(r"\d+(?:[.,]\d+)*")
 
@@ -233,7 +253,8 @@ def assemble_answer(
                 markers.append(seen[key])
         if markers:  # claims without a valid citation are dropped
             refs = "".join(f"[{m}]" for m in markers)
-            sentences.append(f"{claim.text.strip()} {refs}")
+            quotes = [citations[m - 1].quote for m in markers]
+            sentences.append(f"{match_obligation(claim.text.strip(), quotes)} {refs}")
     return " ".join(sentences), citations
 
 
@@ -293,7 +314,9 @@ def answer_question(
         else:
             response = AskResponse(
                 answer=text,
-                summary=checked_summary(llm_answer.summary, text),
+                summary=checked_summary(
+                    match_obligation(llm_answer.summary, [c.quote for c in citations]), text
+                ),
                 citations=citations,
                 refused=False,
                 retrieved_chunk_ids=[c.id for c in chunks],

@@ -424,6 +424,46 @@ specified; no gradients, shadows or emoji. Columns stack below 960 px.
 | Summary checked for numbers only | Numbers (time limits, dates, percentages) are the costly errors; wording is restated from claims shown directly below it. |
 | Eval results not re-run after the summary change | The summary adds an output field after the claims; claims and citations are produced and checked as before. A re-run (about 170 free-tier calls) would confirm it. |
 
+### v1.0.0 release (2026-11-13)
+
+**Demo test** ([docs/demo-test/TEST_LOG.md](docs/demo-test/TEST_LOG.md)): 32 common bank
+compliance questions asked in the real UI (Chrome, screenshots of each), reviewed by hand.
+32/32 answered or refused correctly; 24 of 26 answers fully correct, 2 partly, 0 wrong. Main
+finding: 10 of 26 answers or headings said "must" where the MAS guideline says "should".
+
+**Fix:** `qa.match_obligation` rewrites "must" to "should" in a claim when its cited quotes say
+"should" and contain no binding wording ("must", "shall", "required", "mandatory", "obligation
+to"); the heading is checked against all quotes. Post-processing only, so no prompt or cache
+change. Replayed on the demo answers it caught all 10 cases plus one more (Q01, "STR should be
+filed") and left real "must" rules (the cyber hygiene notice) alone. 8 new tests (160 total).
+
+**Full eval of v1** (run `20261113T081952Z`, same settings as `20261112T154112Z`):
+
+| Metric | Before (12 Nov) | v1.0.0 |
+|---|---|---|
+| Answer correctness | 0.900 | 0.887 (±0.055) |
+| Factual / multi-hop | 0.917 / 0.750 | 0.896 / 0.813 |
+| Citation accuracy | 0.993 | 0.987 |
+| Out-of-scope refusal | 1.000 | 1.000 |
+| False refusals | 4 / 80 | 3 / 80 |
+| p50 / p95 latency | 6.2 s / 83 s (503 retries) | 6.3 s / 7.2 s |
+| "must" in answers | 41 | 22 |
+
+The correctness difference is one question (71 vs 72 of 80) and well inside the 95% interval.
+8 questions moved by half a point (5 down, 3 up); the drops are answers that kept the main point
+but left out a secondary detail (bcm-03, trm-03, out-04), one shorter answer whose citations the
+judge didn't accept (iac-01), and one near-identical answer scored differently (feat-02, judge
+variance). v1 answers are about 12% shorter (266 vs 301 characters) with the same number of
+claims; worth watching if a later run confirms it.
+
+**Decisions**
+
+| Decision | Why |
+|---|---|
+| Ship with correctness 0.887 rather than re-run until it reads 0.90 | Re-running until a nicer number appears is cherry-picking; both runs are reported. |
+| Baseline full LLM-judged comparison still not run | It needs ~170 more free-tier calls; the retrieval comparison (hit@5 0.80 to 0.95) already shows the main gain. |
+| Removed AI co-author trailers from the git history | Owner's request; history rewritten with identical file trees and force-pushed by the owner. |
+
 ---
 
 ## Open questions / notes

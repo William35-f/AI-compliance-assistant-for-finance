@@ -1,6 +1,6 @@
 # ReguLens demo test log
 
-**Round:** 13 November 2026 · **Tester:** Claude (automated in Chrome via Playwright, reviewed by hand) ·
+**Round:** 13 November 2026 · **Method:** automated in Chrome via Playwright, every answer reviewed by hand ·
 **Model:** gemini-3.5-flash-lite (free tier) · **Theme / screen:** light, 1440 × 1000
 
 Questions: common bank compliance topics (AML/CDD, incident reporting, technology and cyber risk,

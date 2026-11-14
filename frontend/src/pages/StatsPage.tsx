@@ -24,6 +24,8 @@ const EVAL_ROWS: [string, string, (v: number | null) => string][] = [
   ["avg_cost_usd", "Avg est. cost / query", formatUsd],
 ];
 
+const RETRIEVAL_KEYS = new Set(["retrieval_hit_rate", "mrr"]);
+
 function EvalTable({ title, snapshot }: { title: string; snapshot: EvalSnapshot | null }) {
   return (
     <section className="panel">
@@ -40,6 +42,8 @@ function EvalTable({ title, snapshot }: { title: string; snapshot: EvalSnapshot 
             <table className="figures">
               <tbody>
                 {EVAL_ROWS.filter(([key]) => snapshot.metrics[key] !== null && snapshot.metrics[key] !== undefined)
+                  // A retrieval-only run never answers or refuses, so only its search metrics mean anything.
+                  .filter(([key]) => !snapshot.config.retrieval_only || RETRIEVAL_KEYS.has(key))
                   .map(([key, label, fmt]) => (
                     <tr key={key}><th scope="row">{label}</th><td className="num strong">{fmt(snapshot.metrics[key] ?? null)}</td></tr>
                   ))}

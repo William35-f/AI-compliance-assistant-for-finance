@@ -1,18 +1,70 @@
 # ReguLens
 
-**An AI assistant for Singapore financial compliance.** ReguLens answers questions about MAS
-(Monetary Authority of Singapore) guidelines using only retrieved passages, and backs every claim
-with a document, page and verbatim quote that the code checks against the source. It extracts
-revenue, net profit, total debt and key risk disclosures from SGX-listed companies' annual reports,
-converting units and verifying each number on the cited financial-statement page. A small agent
-then links each disclosed risk to the relevant MAS guideline sections and flags possible gaps for
-a human to review. Retrieval quality was improved with measured, one-change-at-a-time experiments
-(hit@5 **0.80 → 0.95** on 80 questions). **v1.0.0:** answer correctness **0.89**, citation accuracy
-**0.99**, every out-of-scope question refused, median answer in 6 s.
+[![CI](https://github.com/William35-f/AI-compliance-assistant-for-finance/actions/workflows/ci.yml/badge.svg)](https://github.com/William35-f/AI-compliance-assistant-for-finance/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-1.0.0-0F5E66)
+![Python](https://img.shields.io/badge/python-3.11%2B-18222E)
+![React](https://img.shields.io/badge/react-18-18222E)
 
-**Live demo:** _not deployed yet_ (see [DEPLOY.md](DEPLOY.md)) · **Build log and decisions:** [PROGRESS.md](PROGRESS.md)
+**An AI assistant for Singapore financial compliance, where every answer sits next to its
+evidence.** Ask a question about MAS (Monetary Authority of Singapore) rules and ReguLens answers
+only from the official documents: each point cites a document, page and verbatim quote that the
+code checks against the source, and the cited page opens beside the answer with the paragraph
+highlighted. If the documents don't cover the question, it says so instead of guessing.
 
-## Architecture
+It also extracts revenue, net profit, total debt and key risks from SGX-listed companies' annual
+reports (each number verified on its statement page), and links those risks to the MAS guidelines
+that cover them.
+
+![ReguLens answering a question about incident notification, with the cited MAS paragraph highlighted beside the answer](docs/images/ask-light.png)
+
+**v1.0.0 at a glance** (90-question evaluation): answer correctness **0.89** · citation accuracy
+**0.99** · out-of-scope questions refused **100%** · retrieval hit@5 **0.80 → 0.95** · median
+answer **6 s** · about **$0.0003** per question.
+
+**Live demo:** _not deployed yet_ (see [DEPLOY.md](DEPLOY.md)) · [Changelog](CHANGELOG.md) ·
+[Build log and decisions](PROGRESS.md) · [Demo test report](docs/demo-test/TEST_LOG.md)
+
+> ReguLens is a research and portfolio project. It is not legal or regulatory advice; always
+> check the cited source documents.
+
+## Contents
+
+- [What it does](#what-it-does)
+- [How it works](#how-it-works)
+- [Documents covered](#documents-covered)
+- [Tech stack](#tech-stack)
+- [Evaluation results](#evaluation-results)
+- [Demo test in the real UI](#demo-test-in-the-real-ui)
+- [Retrieval experiments](#retrieval-experiments)
+- [Run it locally](#run-it-locally)
+- [Configuration](#configuration)
+- [API](#api)
+- [Project structure](#project-structure)
+- [Limitations](#limitations)
+- [Future work](#future-work)
+- [Progress](#progress)
+
+## What it does
+
+| Page | What you can do |
+|---|---|
+| **Ask** | Ask about MAS guidelines and notices. The answer is a one-line summary plus numbered points, each with citation chips. The right-hand panel shows the cited page with the document's own paragraph numbers and the cited paragraph highlighted; click any chip or source to switch. Shows sources cited, response time and cost per question. |
+| **Extract** | Pick one of 5 SGX annual reports (or upload a PDF) and get revenue, net profit and total debt in full amounts, each with the number as printed, its page, and whether it was verified on that page, plus the key risk disclosures. |
+| **Risk check** | For a report's top risks, or a risk you describe, find the MAS guideline passages that cover it and flag the ones a person should review. |
+| **Stats and evals** | Live usage (questions, response times, cost, refusals, cache hits) and the latest evaluation scores. |
+
+Light and dark themes, a phone layout with a bottom navigation bar, visible keyboard focus,
+44 px touch targets and WCAG AA contrast throughout.
+
+| Dark theme | Phone |
+|---|---|
+| ![Ask page in the dark theme](docs/images/ask-dark.png) | ![Ask page on a phone](docs/images/ask-mobile.png) |
+
+| Extract from a report | Stats and evals |
+|---|---|
+| ![Extraction of DBS figures, each verified on its page](docs/images/extract.png) | ![Stats page with the v1 evaluation scores](docs/images/stats.png) |
+
+## How it works
 
 ```mermaid
 flowchart LR
@@ -40,13 +92,59 @@ flowchart LR
     AGENT --> RET
 ```
 
-Key ideas:
+**The LLM reads; code checks.** The model only writes language. Everything that can be checked is
+checked in Python before it reaches the screen:
+
+| Check | What it prevents |
+|---|---|
+| Cited passage ids must exist; claims without a valid citation are dropped | Answers built on nothing |
+| Every quote is matched word for word against its passage; if it isn't found, the closest real sentence is shown and flagged "closest match" | Made-up quotes |
+| The one-line summary heading is rejected if it contains a number the cited points don't | Invented time limits or figures in the heading |
+| "Must" becomes "should" when the cited guideline says "should" | Overstating how binding a guideline is |
+| Two-stage refusal: a similarity threshold, then the model's own "not answerable" flag | Guessing outside the documents |
+| Extracted numbers: units converted and totals summed in code, each number verified on its page | Misread units and arithmetic slips |
+
+Other key ideas:
 - **The LLM reads; code checks.** Citations, quotes, units and arithmetic are verified in Python,
   so a hallucinated quote or a misread unit is caught instead of shown as fact.
 - **Two-stage refusal.** A similarity threshold refuses clearly unrelated questions without an
   LLM call; the model's own "not answerable" flag handles near-domain ones.
 - **Everything measured.** An eval harness with 90 hand-checked questions, an LLM judge, a
   judge-vs-human agreement check, confidence intervals and a CI quality gate.
+
+## Documents covered
+
+Answers come only from these 10 MAS publications (the PDFs are downloaded by a script, not stored
+in git; see `data/sources.csv`):
+
+| MAS publication |
+|---|
+| Technology Risk Management Guidelines (January 2021) |
+| MAS Notice FSM-N06 on Cyber Hygiene (Banks) |
+| Guidelines on Business Continuity Management (June 2022) |
+| Guidelines on Outsourcing (Banks) |
+| Guidelines to MAS Notice 626 on Prevention of Money Laundering and Countering the Financing of Terrorism (Banks) |
+| Guidelines on Individual Accountability and Conduct (September 2020) |
+| Guidelines on Fair Dealing: Board and Senior Management Responsibilities (May 2024) |
+| Guidelines on Environmental Risk Management for Banks (December 2020) |
+| Principles to Promote Fairness, Ethics, Accountability and Transparency (FEAT) in the Use of AI and Data Analytics (2018) |
+| Guidelines on Artificial Intelligence Risk Management (October 2026) |
+
+Annual reports for extraction: DBS Group Holdings 2025, OCBC 2025, Singtel 2026 (FY to 31 March),
+Keppel 2025 and Sheng Siong Group 2025.
+
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| Backend | Python 3.11+, FastAPI, Pydantic, psycopg 3 |
+| Database and search | PostgreSQL 16 + pgvector (vectors) and Postgres full-text search (BM25-style), fused with reciprocal rank fusion |
+| Embeddings | nomic-embed-text v1.5, run locally (ONNX via fastembed) |
+| LLM | Google Gemini (`gemini-3.5-flash-lite`) through a swappable client with a response cache |
+| PDF parsing | PyMuPDF |
+| Frontend | React 18, TypeScript, Vite |
+| Quality | pytest (162 tests), ruff, GitHub Actions with a 20-question smoke eval gate |
+| Packaging | Docker Compose for local Postgres; one Docker image for API + frontend + embedding model |
 
 ## Evaluation results
 
@@ -76,7 +174,25 @@ debt **15 of 15 correct**, each on the right page and verified on it; fiscal yea
 key risks 5 of 5; company name 4 of 5 (the model wrote OCBC as "Overseas-Chinese" instead of
 "Oversea-Chinese").
 
-## Experiments (Phase 4)
+## Demo test in the real UI
+
+32 common bank compliance questions (AML and customer due diligence, incident reporting,
+technology and cyber risk, outsourcing, AI governance, conduct), worded the way a compliance
+officer would ask, were typed into the Ask page in Chrome, and every answer was checked by hand
+against its highlighted source.
+
+| | Result |
+|---|---|
+| Answered or refused correctly | **32 of 32** (26 answered, 6 out-of-scope refused, including a request to ignore the sources) |
+| Answers factually correct | 24 of 26, 2 partly, 0 wrong |
+| Typical response time | 2.4 s |
+
+Full log with every answer and screenshot: [docs/demo-test/TEST_LOG.md](docs/demo-test/TEST_LOG.md)
+(also as a [Word report](docs/demo-test/ReguLens-demo-test-report.docx)); blank template for new
+rounds: [TEMPLATE.md](docs/demo-test/TEMPLATE.md). The test found that answers tended to turn
+"should" into "must", which v1 fixes in code.
+
+## Retrieval experiments
 
 All numbers come from `eval/run_eval.py --retrieval-only` on the 80 in-scope questions
 (hit@5 = the expected document *and* page is among the 5 retrieved chunks). "+/-" counts
@@ -136,6 +252,21 @@ telling the bank it brought in another company?" instead of "sub-contractor noti
 
 ## Run it locally
 
+**Quick start** (after the one-time setup below): start Docker Desktop, then
+
+```powershell
+docker compose up -d --wait                              # Postgres + pgvector
+.venv\Scripts\activate
+uvicorn regulens.main:app --port 8001                     # open http://127.0.0.1:8001
+```
+
+The API serves the built frontend (`frontend/dist`) on the same port, so the whole app is at
+<http://127.0.0.1:8001> and the API docs at <http://127.0.0.1:8001/docs>. Run
+`cd frontend; npm install; npm run build` once first, or use `npm run dev` (port 5173) while
+working on the frontend.
+
+**One-time setup**
+
 Prerequisites: Python 3.11+, Node 20+, Docker Desktop, a free Gemini API key
 (<https://aistudio.google.com/apikey>).
 
@@ -176,6 +307,23 @@ once, or call tools directly, for example `.venv\Scripts\python -m pytest backen
 Or run everything in one container: `docker build -t regulens .` then
 `docker run -p 8000:8000 --env-file .env -e DATABASE_URL=postgresql://regulens:regulens@host.docker.internal:5432/regulens regulens`.
 
+## Configuration
+
+Settings are read from `.env` in the repo root (copy `.env.example`). The main ones:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `GEMINI_API_KEY` | (required) | Free key from <https://aistudio.google.com/apikey> |
+| `DATABASE_URL` | `postgresql://regulens:regulens@localhost:5432/regulens` | Postgres connection |
+| `GEMINI_MODEL` | `gemini-3.5-flash-lite` | Model that answers questions |
+| `GEMINI_JUDGE_MODEL` | `gemini-3.5-flash-lite` | Model that grades answers in evals |
+| `GEMINI_REQUESTS_PER_MINUTE` | `10` | Client-side pacing for the free tier |
+| `GEMINI_MAX_RETRIES` | `4` | Retries on 429/5xx and network errors (use 8 for long eval runs) |
+| `RETRIEVAL_MODE` / `RETRIEVAL_K` | `hybrid` / `5` | Search mode (`vector`, `fts`, `hybrid`) and passages per question |
+| `MIN_RETRIEVAL_SCORE` | `0.60` | Below this best-match similarity, refuse without calling the LLM |
+| `RATE_LIMIT_ASK_PER_MINUTE` | `10` | Questions allowed per minute |
+| `RATE_LIMIT_HEAVY_PER_HOUR` | `6` | `/extract` and `/risk-check` calls allowed per hour |
+
 ## API
 
 | Endpoint | What it does |
@@ -187,10 +335,28 @@ Or run everything in one container: `docker build -t regulens .` then
 | `GET /sources/{id}/pages/{page}?quote=` | One page as paragraphs (with the document's own paragraph numbers), the paragraph holding the quote flagged; powers the source panel |
 | `GET /sources`, `GET /health` | Document registry; liveness/readiness (503 if the database is down) |
 
+## Project structure
+
+```
+backend/         FastAPI app (package `regulens`) and 162 tests
+  regulens/      qa.py (answers + checks), retrieval.py, extraction.py, risk_agent.py,
+                 page_view.py (source panel), llm.py (Gemini client + cache), main.py (API)
+frontend/        React + TypeScript app: Ask, Extract, Risk check, Stats and evals
+eval/            questions, extraction truth, eval scripts and saved results
+docs/demo-test/  32-question demo test: log, Word report, screenshots, template
+docs/images/     README screenshots
+data/            sources.csv (committed); raw/ PDFs (git-ignored, see scripts/download_sources.py)
+scripts/         download_sources, check_sources, ingest
+Dockerfile       one image: API + built frontend + embedding model
+DEPLOY.md        step-by-step deployment to Render + Neon
+CHANGELOG.md     release notes
+PROGRESS.md      build log: what was built, measured and decided, phase by phase
+```
+
 ## Limitations
 
-- **Small, self-written eval set.** 90 + 20 questions, drafted from the PDFs by the assistant that
-  built the system and checked against the source pages; differences under ~5 points are noise,
+- **Small, self-written eval set.** 90 + 20 questions, drafted with AI assistance from the PDFs and
+  checked against the source pages; differences under ~5 points are noise,
   and an independent human review of the questions is still worth doing.
 - **LLM judge bias.** The judge is a Gemini model grading Gemini answers; `eval/judge_agreement.py`
   measures agreement with a human on a sample to keep it honest.
@@ -214,18 +380,6 @@ Or run everything in one container: `docker build -t regulens .` then
 - Weighted fusion or a fine-tuned reranker, evaluated on paraphrased questions.
 - Streaming answers in the UI; per-user auth and quotas.
 
-## Repository layout
-
-```
-backend/     FastAPI app (package `regulens`) and 162 tests
-frontend/    React + TypeScript app (Ask, Extract, Stats)
-eval/        questions, extraction truth, eval scripts and saved results
-data/        sources.csv (committed); raw/ PDFs (git-ignored, see scripts/download_sources.py)
-scripts/     download_sources, check_sources, ingest
-Dockerfile   one image: API + built frontend + embedding model
-DEPLOY.md    step-by-step deployment to Render + Neon
-```
-
 ## Progress
 
 | Phase | Status |
@@ -236,7 +390,7 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 | 3. Evaluation harness | ✅ Done; v1.0.0: correctness 0.89, citation accuracy 0.99, out-of-scope refusal 1.00 |
 | 4. Retrieval experiments | ✅ Done (retrieval metrics) |
 | 5. Report extraction and risk agent | ✅ Done; extraction 15/15 numbers correct |
-| 6. Frontend, CI and deployment | 🟡 Built; deployment needs your Render/Neon accounts |
+| 6. Frontend, CI and deployment | 🟡 Built; public deployment planned (see [DEPLOY.md](DEPLOY.md)) |
 
 <details>
 <summary>Checklist by phase</summary>
@@ -281,7 +435,7 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 - [x] Extraction accuracy run (15/15 numbers) and live injection test (passed)
 
 ### Phase 6: Frontend, CI and deployment
-- [x] React app: Ask (clickable citations), Extract (table + risk check), Stats
+- [x] React app: Ask (clickable citations), Extract (table + risk check), Risk check, Stats
 - [x] Ask redesign: answer beside the cited page, cited paragraph highlighted (located for 147/147 eval citations)
 - [x] Summary heading checked against the claims; "must" softened to "should" when the source says "should"
 - [x] Risk check page, light/dark themes, 44 px touch targets, WCAG AA contrast
@@ -289,7 +443,11 @@ DEPLOY.md    step-by-step deployment to Render + Neon
 - [x] Rate limiting; caches for repeated questions and query embeddings
 - [x] GitHub Actions: lint, tests with pgvector, frontend build, 20-question smoke eval gate
 - [x] Dockerfile (one image: API + frontend + embedding model) and [DEPLOY.md](DEPLOY.md)
-- [ ] Deploy to Render + Neon (needs your accounts) and add the live demo link
+- [ ] Deploy to Render + Neon and add the live demo link
 - [ ] Add the `GEMINI_API_KEY` repository secret so the CI smoke eval runs
 
 </details>
+
+## Author
+
+Built by [William35-f](https://github.com/William35-f).

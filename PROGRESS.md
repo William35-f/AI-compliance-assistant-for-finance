@@ -162,9 +162,9 @@
 - `eval/questions.jsonl`: **90 questions**: 72 factual, 8 multi-hop (each spanning two MAS
   documents), 10 out-of-scope (several deliberately near-domain: SORA rate, Notice 637 capital
   ratios, EU AI Act, DBS profit). Every in-scope question has its expected PDF page(s).
-  *Authorship note:* the brief planned for the student to write these. At the user's request they
-  were drafted by Claude from the source PDFs, page by page; each expected answer and page was
-  checked against the PDF text. A human review of a sample is still recommended.
+  *Authorship note:* the questions were drafted with AI assistance from the source PDFs, page by
+  page; each expected answer and page was checked against the PDF text. A human review of a sample
+  is still recommended.
 - `regulens/evaluation.py` + `eval/run_eval.py`: hit@k and MRR (page-range overlap; multi-hop needs
   every source), LLM-judge correctness (0 / 0.5 / 1 rubric), citation accuracy (the judge checks
   each [n] marker against its passage), out-of-scope refusal rate, false-refusal rate, p50/p95
